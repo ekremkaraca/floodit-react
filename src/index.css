@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-game-blue: #3584e4;
+  --color-game-green: #33d17a;
+  --color-game-yellow: #f6d32d;
+  --color-game-orange: #ff7800;
+  --color-game-red: #ed333b;
+  --color-game-purple: #9141ac;
+}
