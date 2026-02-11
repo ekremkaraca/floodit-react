@@ -1,4 +1,5 @@
 import { ChevronDown, Moon, Sun } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { Difficulty } from "../types/game";
 import { DIFFICULTIES } from "../utils/gameUtils";
 import { useDarkMode } from "../hooks/useDarkMode";
@@ -15,21 +16,52 @@ export function GameControls({
   disabled = false,
 }: GameControlsProps) {
   const { isDarkMode, toggleDarkMode, isMounted } = useDarkMode();
+  const [isNewGameMenuOpen, setIsNewGameMenuOpen] = useState(false);
+  const newGameMenuRef = useRef<HTMLDetailsElement | null>(null);
+
+  useEffect(() => {
+    if (!isNewGameMenuOpen) {
+      return;
+    }
+
+    const closeOnOutsideClick = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target || !newGameMenuRef.current?.contains(target)) {
+        setIsNewGameMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("touchstart", closeOnOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("touchstart", closeOnOutsideClick);
+    };
+  }, [isNewGameMenuOpen]);
 
   return (
     <div className="flex items-center gap-2 px-1 py-0">
       {/* Mobile-First New Game Button */}
-      <details className="relative sm:relative">
+      <details
+        ref={newGameMenuRef}
+        open={isNewGameMenuOpen}
+        className="relative sm:relative"
+      >
         <summary
           className={`list-none px-3 py-2 sm:px-4 sm:py-2.5 bg-linear-to-r from-green-500 to-emerald-500 text-white rounded-lg transition-all duration-200 font-semibold shadow-md text-sm sm:text-base ${
             disabled
               ? "opacity-50 cursor-not-allowed"
               : "hover:from-green-600 hover:to-emerald-600 cursor-pointer active:scale-95"
-              }`}
+          }`}
           aria-label="Start new game"
           aria-disabled={disabled}
           onClick={(event) => {
-            if (disabled) event.preventDefault();
+            event.preventDefault();
+            if (disabled) {
+              return;
+            }
+            setIsNewGameMenuOpen((open) => !open);
           }}
         >
           <span className="inline-flex items-center gap-1 sm:gap-2">
@@ -47,6 +79,7 @@ export function GameControls({
                 type="button"
                 onClick={() => {
                   onNewGame(difficulty);
+                  setIsNewGameMenuOpen(false);
                 }}
                 disabled={disabled}
                 className="w-full px-3 py-2 sm:px-4 sm:py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
