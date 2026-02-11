@@ -25,7 +25,7 @@ export function GameControls({
             disabled
               ? "opacity-50 cursor-not-allowed"
               : "hover:from-green-600 hover:to-emerald-600 cursor-pointer active:scale-95"
-          }`}
+              }`}
           aria-label="Start new game"
           aria-disabled={disabled}
           onClick={(event) => {
@@ -45,7 +45,9 @@ export function GameControls({
               <button
                 key={difficulty.name}
                 type="button"
-                onClick={() => onNewGame(difficulty)}
+                onClick={() => {
+                  onNewGame(difficulty);
+                }}
                 disabled={disabled}
                 className="w-full px-3 py-2 sm:px-4 sm:py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 aria-label={`Start new ${difficulty.name.toLowerCase()} game (${difficulty.rows}×${difficulty.columns})`}

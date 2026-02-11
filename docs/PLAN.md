@@ -171,6 +171,9 @@ The Flood It web game is now complete and playable at `http://localhost:5173` wi
   - Interactive sliders for board size and move limit configuration
   - Real-time game settings preview
   - Seamless integration with existing game flow
+- **Confirmation Dialog Flow**: Confirmation prompts for reset and new game actions
+  - Distinct messages for reset vs new game
+  - Custom game currently bypasses confirmation and opens settings directly
 - **Difficulty Alignment**: Updated to match original Go version parameters
   - Easy: 6×6 board with 15 moves (was 12×12)
   - Normal: 10×10 board with 20 moves (was 16×16) 
@@ -181,12 +184,16 @@ The Flood It web game is now complete and playable at `http://localhost:5173` wi
   - Comprehensive README with Bun-specific commands
   - Optimized for Bun's faster package management and runtime
 
+### **Recent Fixes**
+- **Game Over restart**: Removed full page reload and restart via in-app flow
+- **Confirmation prompts**: Distinct copy for reset vs new game
+
 ### **Recent UI/UX Enhancements**
 - **Modal Game Over Screen**: Beautiful modal interface with animations
   - Smooth fade and scale transitions
   - Backdrop click to close functionality
   - Enhanced game statistics display
-  - Action buttons for new game and close
+  - Action buttons for new game and close (no full page reload)
 - **Mobile-Optimized Header**: Compact and responsive design
   - Reduced height from ~112px to ~60px (47% reduction)
   - Mobile-first responsive layout with essential info prioritization

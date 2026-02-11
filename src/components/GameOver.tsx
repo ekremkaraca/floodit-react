@@ -1,11 +1,14 @@
+import type { Board } from '../types/game';
+
 interface GameOverProps {
     hasWon: boolean;
-    board: any;
+    board: Board;
     isOpen: boolean;
     onClose: () => void;
+    onNewGame: () => void;
 }
 
-export function GameOver({ hasWon, board, isOpen, onClose }: GameOverProps) {
+export function GameOver({ hasWon, board, isOpen, onClose, onNewGame }: GameOverProps) {
     return (
         <div 
             className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${
@@ -85,9 +88,7 @@ export function GameOver({ hasWon, board, isOpen, onClose }: GameOverProps) {
                         </button>
                         <button
                             onClick={() => {
-                                onClose();
-                                // Trigger new game - this would need to be passed as a prop
-                                window.location.reload();
+                                onNewGame();
                             }}
                             className="px-6 py-3 bg-linear-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 font-semibold shadow-md"
                         >

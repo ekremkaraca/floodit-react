@@ -7,10 +7,22 @@ import { ColorKeyboard } from "./ColorKeyboard";
 import { CustomGameMode } from "./CustomGameMode";
 import { Welcome } from './Welcome';
 import { GameOver } from './GameOver';
+import { ConfirmDialog } from './ConfirmDialog';
 
 export function Game() {
   const [showCustomMode, setShowCustomMode] = useState(false);
   const [showGameOverModal, setShowGameOverModal] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+  const [confirmDialogContent, setConfirmDialogContent] = useState({
+    title: 'Confirm Action',
+    message: 'Are you sure you want to proceed?',
+  });
+  const [lastGameConfig, setLastGameConfig] = useState<
+    | { type: 'difficulty'; difficulty: Difficulty }
+    | { type: 'custom'; settings: CustomGameSettings }
+    | null
+  >(null);
   
   const {
     board,
@@ -33,9 +45,7 @@ export function Game() {
     const result = makeMove(colorName);
 
     if (result.gameState === "won" || result.gameState === "lost") {
-      // Show modal when game ends
       setShowGameOverModal(true);
-      console.log(`Game ${result.gameState}!`);
     }
   };
 
@@ -43,20 +53,71 @@ export function Game() {
     if (difficulty.name === 'Custom') {
       setShowCustomMode(true);
     } else {
-      startNewGame(difficulty);
+      const startGame = () => {
+        startNewGame(difficulty);
+        setShowCustomMode(false);
+        setLastGameConfig({ type: 'difficulty', difficulty });
+      };
+      if (!board) {
+        startGame();
+        return;
+      }
+      setPendingAction(() => startGame);
+      setConfirmDialogContent({
+        title: 'Start New Game?',
+        message: 'Starting a new game will end your current game. Continue?',
+      });
+      setShowConfirmDialog(true);
     }
+  };
+
+  const handleReset = () => {
+    if (!board) return;
+    setPendingAction(() => {
+      resetGame();
+    });
+    setConfirmDialogContent({
+      title: 'Reset Game?',
+      message: 'This will reset your current board and progress. Continue?',
+    });
+    setShowConfirmDialog(true);
   };
 
   const handleCustomGame = (settings: CustomGameSettings) => {
     startCustomGame(settings);
     setShowCustomMode(false);
+    setLastGameConfig({ type: 'custom', settings });
   };
 
   const handleCancelCustom = () => {
     setShowCustomMode(false);
   };
 
+  const handleConfirmAction = () => {
+    if (pendingAction) {
+      pendingAction();
+      setPendingAction(null);
+    }
+    setShowConfirmDialog(false);
+  };
+
   const handleCloseGameOver = () => {
+    setShowGameOverModal(false);
+  };
+
+  const handleNewGameFromGameOver = () => {
+    if (lastGameConfig?.type === 'difficulty') {
+      startNewGame(lastGameConfig.difficulty);
+    } else if (lastGameConfig?.type === 'custom') {
+      startCustomGame(lastGameConfig.settings);
+    } else if (board) {
+      startNewGame({
+        name: board.name,
+        rows: board.rows,
+        columns: board.columns,
+        maxSteps: board.maxSteps,
+      });
+    }
     setShowGameOverModal(false);
   };
 
@@ -85,7 +146,7 @@ export function Game() {
             currentStep={board.step}
             maxSteps={board.maxSteps}
             onNewGame={handleNewGame}
-            onReset={resetGame}
+            onReset={handleReset}
             controlsDisabled={false}
           />
         </div>
@@ -99,6 +160,7 @@ export function Game() {
                 board={board} 
                 isOpen={showGameOverModal}
                 onClose={handleCloseGameOver}
+                onNewGame={handleNewGameFromGameOver}
             />
           )}
 
@@ -118,6 +180,15 @@ export function Game() {
 
         </div>
       </div>
+
+      {/* Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={() => setShowConfirmDialog(false)}
+        onConfirm={handleConfirmAction}
+        title={confirmDialogContent.title}
+        message={confirmDialogContent.message}
+      />
     </div>
   );
 }
