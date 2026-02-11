@@ -111,7 +111,11 @@ export function flood(board: Board, newColor: string): Board {
     return board;
   }
 
+  const visited = Array.from({ length: board.rows }, () =>
+    Array(board.columns).fill(false)
+  );
   const queue: Position[] = [{ row: 0, column: 0 }];
+  visited[0][0] = true;
   newMatrix[0][0] = newColor;
 
   while (queue.length > 0) {
@@ -119,7 +123,13 @@ export function flood(board: Board, newColor: string): Board {
     const neighbors = getNeighbors(board, current);
 
     for (const pos of neighbors) {
-      if (newMatrix[pos.row][pos.column] === targetColor) {
+      if (visited[pos.row][pos.column]) {
+        continue;
+      }
+
+      const cellColor = newMatrix[pos.row][pos.column];
+      if (cellColor === targetColor || cellColor === newColor) {
+        visited[pos.row][pos.column] = true;
         newMatrix[pos.row][pos.column] = newColor;
         queue.push(pos);
       }

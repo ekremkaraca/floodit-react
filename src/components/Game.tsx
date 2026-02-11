@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useGameLogic } from "../hooks/useGameLogic";
 import type { Difficulty, CustomGameSettings } from "../types/game";
 import { GameBoard } from "./GameBoard";
@@ -32,6 +32,7 @@ export function Game() {
     startCustomGame,
     makeMove,
     resetGame,
+    quitGame,
     stepsLeft,
     isGameOver,
     hasWon,
@@ -71,7 +72,7 @@ export function Game() {
     }
   };
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     if (!board) return;
     setPendingAction(() => {
       resetGame();
@@ -81,7 +82,7 @@ export function Game() {
       message: 'This will reset your current board and progress. Continue?',
     });
     setShowConfirmDialog(true);
-  };
+  }, [board, resetGame]);
 
   const handleCustomGame = (settings: CustomGameSettings) => {
     startCustomGame(settings);
@@ -92,6 +93,95 @@ export function Game() {
   const handleCancelCustom = () => {
     setShowCustomMode(false);
   };
+
+  const startNewRoundWithCurrentSettings = useCallback(() => {
+    if (lastGameConfig?.type === 'difficulty') {
+      startNewGame(lastGameConfig.difficulty);
+      return;
+    }
+
+    if (lastGameConfig?.type === 'custom') {
+      startCustomGame(lastGameConfig.settings);
+      return;
+    }
+
+    if (board) {
+      startNewGame({
+        name: board.name,
+        rows: board.rows,
+        columns: board.columns,
+        maxSteps: board.maxSteps,
+      });
+    }
+  }, [board, lastGameConfig, startCustomGame, startNewGame]);
+
+  const handleQuitToWelcome = useCallback(() => {
+    setShowGameOverModal(false);
+    setShowCustomMode(false);
+    quitGame();
+  }, [quitGame]);
+
+  const isTextInputTarget = (target: EventTarget | null): boolean => {
+    if (!(target instanceof HTMLElement)) return false;
+
+    const tagName = target.tagName.toLowerCase();
+    return (
+      tagName === 'input' ||
+      tagName === 'textarea' ||
+      tagName === 'select' ||
+      target.isContentEditable
+    );
+  };
+
+  useEffect(() => {
+    const handleKeyboardShortcut = (event: KeyboardEvent) => {
+      // Use Alt+Shift combinations to avoid common browser defaults
+      // like reload/new window/quit on Ctrl/Cmd shortcuts.
+      const isShortcutModifier = event.altKey && event.shiftKey;
+      if (!isShortcutModifier || event.ctrlKey || event.metaKey || isTextInputTarget(event.target)) {
+        return;
+      }
+
+      const key = event.key.toLowerCase();
+
+      if (key === 'r' && board && !showConfirmDialog && !showCustomMode) {
+        event.preventDefault();
+        handleReset();
+        return;
+      }
+
+      if (key === 'n' && board && !showConfirmDialog && !showCustomMode) {
+        event.preventDefault();
+        setPendingAction(() => startNewRoundWithCurrentSettings);
+        setConfirmDialogContent({
+          title: 'Start New Game?',
+          message: 'This will start a new board with your current settings. Continue?',
+        });
+        setShowConfirmDialog(true);
+        return;
+      }
+
+      if (key === 'q' && board && !showConfirmDialog && !showCustomMode) {
+        event.preventDefault();
+        setPendingAction(() => handleQuitToWelcome);
+        setConfirmDialogContent({
+          title: 'Quit Game?',
+          message: 'This will return to the welcome screen and end your current game. Continue?',
+        });
+        setShowConfirmDialog(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyboardShortcut);
+    return () => window.removeEventListener('keydown', handleKeyboardShortcut);
+  }, [
+    board,
+    handleQuitToWelcome,
+    handleReset,
+    showConfirmDialog,
+    showCustomMode,
+    startNewRoundWithCurrentSettings,
+  ]);
 
   const handleConfirmAction = () => {
     if (pendingAction) {
@@ -106,18 +196,7 @@ export function Game() {
   };
 
   const handleNewGameFromGameOver = () => {
-    if (lastGameConfig?.type === 'difficulty') {
-      startNewGame(lastGameConfig.difficulty);
-    } else if (lastGameConfig?.type === 'custom') {
-      startCustomGame(lastGameConfig.settings);
-    } else if (board) {
-      startNewGame({
-        name: board.name,
-        rows: board.rows,
-        columns: board.columns,
-        maxSteps: board.maxSteps,
-      });
-    }
+    startNewRoundWithCurrentSettings();
     setShowGameOverModal(false);
   };
 

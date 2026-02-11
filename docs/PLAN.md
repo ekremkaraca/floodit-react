@@ -187,6 +187,12 @@ The Flood It web game is now complete and playable at `http://localhost:5173` wi
 ### **Recent Fixes**
 - **Game Over restart**: Removed full page reload and restart via in-app flow
 - **Confirmation prompts**: Distinct copy for reset vs new game
+- **Keyboard shortcuts**: Added `Alt+Shift+R` (reset), `Alt+Shift+N` (new board with current settings), and `Alt+Shift+Q` (quit to welcome) with confirmation dialogs
+- **Welcome screen shortcut guide**: Added a dedicated keyboard shortcuts section to improve discoverability
+- **Flood-fill correctness**: Updated BFS to also absorb connected cells that already match the selected color
+- **Dark mode hook stability**: Refactored initialization to remove effect-driven state updates and satisfy strict hook linting
+- **Color keyboard memo cleanup**: Removed stale dependency warning by inlining gap calculation in memoized layout
+- **Quality gate**: `bun run lint` and `bun run build` now pass after the latest fixes
 
 ### **Recent UI/UX Enhancements**
 - **Modal Game Over Screen**: Beautiful modal interface with animations
@@ -225,7 +231,7 @@ The Flood It web game is now complete and playable at `http://localhost:5173` wi
   - Responsive gaps and padding per board size
 
 ### **Future Enhancements (Optional)**
-- ⌨️ **Keyboard Shortcuts**: Ctrl+R (restart), Ctrl+N (new game), Ctrl+Q (quit)
+- ✅ ⌨️ **Keyboard Shortcuts**: Alt+Shift+R (restart), Alt+Shift+N (new game), Alt+Shift+Q (quit)
 - 📖 **Help/Rules Page**: Dedicated game instructions and controls guide
 - 🔔 **Toast Notifications**: User feedback for actions and errors
 - 🌐 **Internationalization**: Multi-language support for broader accessibility

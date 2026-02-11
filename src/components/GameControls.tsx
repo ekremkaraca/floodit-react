@@ -1,4 +1,4 @@
-import { ChevronDown, Moon, Sun } from "lucide-react";
+import { ChevronDown, Moon, Sun, Code } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Difficulty } from "../types/game";
 import { DIFFICULTIES } from "../utils/gameUtils";
@@ -71,7 +71,7 @@ export function GameControls({
           </span>
         </summary>
 
-        <div className="absolute top-full left-0 mt-1 sm:mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-10 min-w-full sm:min-w-[200px]">
+        <div className="absolute top-full left-0 mt-1 sm:mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-10 min-w-full sm:min-w-50">
           <div className="py-1 sm:py-2">
             {DIFFICULTIES.map((difficulty) => (
               <button
@@ -122,6 +122,20 @@ export function GameControls({
         ) : (
           <Moon className="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors" />
         )}
+      </button>
+
+      {/* Github source code button */}
+      <button
+        type="button"
+        onClick={() =>
+          window.open("https://github.com/ekremkaraca/floodit-react", "_blank")
+        }
+        className="px-2 py-2 sm:px-4 sm:py-2.5 bg-linear-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all duration-200 font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+        title="View source code on GitHub"
+        aria-label="View source code on GitHub"
+        disabled={!isMounted}
+      >
+        <Code className="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors" />
       </button>
     </div>
   );

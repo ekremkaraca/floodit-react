@@ -74,6 +74,11 @@ export function useGameLogic() {
     setSelectedColor('');
   }, [board]);
 
+  const quitGame = useCallback(() => {
+    setBoard(null);
+    setSelectedColor('');
+  }, []);
+
   const stepsLeft = board ? getStepsLeft(board) : 0;
   const isGameOver = board ? (isAllFilled(board) || stepsLeft < 1) : false;
   const hasWon = board ? isAllFilled(board) : false;
@@ -86,6 +91,7 @@ export function useGameLogic() {
     startCustomGame,
     makeMove,
     resetGame,
+    quitGame,
     stepsLeft,
     isGameOver,
     hasWon,

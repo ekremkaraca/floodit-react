@@ -39,15 +39,6 @@ export function ColorKeyboard({ colors, selectedColor, onColorSelect, disabled =
     return colorMap[colorName] || 'bg-gray-400 hover:bg-gray-500';
   };
 
-  const getGapSize = (): number => {
-    if (!board) return 8;
-
-    const boardSize = board.rows * board.columns;
-
-    if (boardSize <= 100) return 10;
-    return 8;
-  };
-
   const getPadding = (): string => {
     if (!board) return 'p-4';
 
@@ -61,13 +52,13 @@ export function ColorKeyboard({ colors, selectedColor, onColorSelect, disabled =
   const layout = useMemo(() => {
     const width = containerWidth > 0 ? containerWidth : 360;
     const columns = width < 420 ? 3 : Math.min(colors.length, 6);
-    const gap = getGapSize();
+    const boardSize = board ? board.rows * board.columns : 0;
+    const gap = boardSize > 0 && boardSize <= 100 ? 10 : 8;
 
     let maxSize = 64;
     let minSize = 36;
 
     if (board) {
-      const boardSize = board.rows * board.columns;
       if (boardSize <= 36) {
         maxSize = 88;
         minSize = 48;

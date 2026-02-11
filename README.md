@@ -149,4 +149,4 @@ Based on the original [Flood It](https://github.com/tfuxu/floodit) GTK desktop a
 
 Game algorithm inspired by [Open Flood](https://github.com/GunshipPenguin/open_flood) and [The FloodIt! game](https://otfried.org/scala/floodit.html) by Otfried Cheong.
 
-Thanks [Windsurf IDE](https://windsurf.com) and its AI assistant for helping with the implementation.
+Thanks [Windsurf IDE](https://windsurf.com), [OpenAI Codex](https://openai.com/codex/) and their AI assistants for helping with the implementation.
