@@ -2,6 +2,8 @@
 
 A modern web implementation of the classic Flood It puzzle game, built with React, TypeScript, and Tailwind CSS.
 
+[Demo](https://floodit-react.vercel.app/)
+
 ## Features
 
 - 🎮 **Classic Gameplay**: Flood the entire board with one color in limited moves
@@ -91,12 +93,14 @@ bun preview
 - **Mobile-Optimized Header**: Compact design with responsive layout
 - **Mobile-Friendly Controls**: Touch-optimized buttons with smart sizing
 - **Dynamic Color Keyboard**: Adaptive button sizes based on board difficulty
+- **Responsive Game Board**: Grid scales to viewport/container size with aspect ratio preserved
 
 ### 📱 Mobile Improvements
 - **Responsive Header**: Adapts from compact mobile to full desktop layout
 - **Touch-Optimized Buttons**: Larger touch targets and press feedback
 - **Smart Button Labels**: Symbols on mobile, text on desktop
 - **Adaptive Color Keys**: Larger buttons for easy boards, compact for hard boards
+- **Board + Keyboard Visibility**: Desktop height cap keeps controls visible without scrolling
 
 ### 🎨 UI/UX Enhancements
 - **Container Centering**: Proper max-width containers for better alignment

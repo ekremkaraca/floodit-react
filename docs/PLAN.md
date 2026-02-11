@@ -1,3 +1,7 @@
+# The Plan
+
+Entire plan of the game mostly written with Windsurf AI since it is a game porting project.
+
 ## Game Analysis Summary
 
 The original Flood It is a **GTK4 desktop application** written in Go with these core components:
@@ -198,6 +202,19 @@ The Flood It web game is now complete and playable at `http://localhost:5173` wi
   - Normal (10×10): Standard balanced sizing
   - Hard (14×14): 12.5% smaller buttons for space efficiency
   - Custom/Large: Compact sizing for maximum board visibility
+- **Responsive Game Board Scaling**: Grid now sizes based on viewport and container
+  - Uses mobile-friendly width/height caps with aspect-ratio preservation
+  - Board can expand to fill available width on small screens
+  - Desktop height cap reserves space so the color keyboard stays visible
+- **Color Keyboard Layout Sync**: Button sizing now reacts to available space
+  - Measures container width for consistent fit on mobile
+  - Scales button size with board size for better usability
+
+### **Responsive Sizing Rules**
+- **Board width cap**: 90% of viewport width (and container width if smaller)
+- **Board height cap**: 90% of viewport height on mobile, 65% on desktop (>= 1024px)
+- **Max board size**: 900px on either dimension
+- **Aspect ratio**: Preserved based on rows/columns
   - Responsive gaps and padding per board size
 
 ### **Future Enhancements (Optional)**

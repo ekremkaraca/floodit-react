@@ -103,7 +103,7 @@ export function Game() {
           )}
 
           <div className="flex-1 min-h-0 flex items-center justify-center">
-            <div className="w-full">
+            <div className="w-full h-full min-h-0">
               <GameBoard board={board} />
             </div>
           </div>
