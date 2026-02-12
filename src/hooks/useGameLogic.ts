@@ -6,6 +6,7 @@ import {
   flood,
   getStepsLeft,
   isAllFilled,
+  AUTO_GENERATE_SEED,
   DEFAULT_COLORS,
 } from '../utils/gameUtils';
 
@@ -15,7 +16,7 @@ export function useGameLogic() {
 
   const startNewGame = useCallback((
     difficulty: Difficulty,
-    seed: number = 0
+    seed: number = AUTO_GENERATE_SEED
   ) => {
     const newBoard = initializeBoard(
       difficulty.name,
@@ -53,7 +54,7 @@ export function useGameLogic() {
 
   const startCustomGame = useCallback((
     settings: CustomGameSettings,
-    seed: number = 0
+    seed: number = AUTO_GENERATE_SEED
   ) => {
     const newBoard = initializeCustomBoard(settings, seed);
     setBoard(newBoard);
@@ -67,7 +68,7 @@ export function useGameLogic() {
       board.name,
       board.rows,
       board.columns,
-      board.seed,
+      AUTO_GENERATE_SEED,
       board.maxSteps
     );
     setBoard(newBoard);

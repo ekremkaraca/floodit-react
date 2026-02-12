@@ -1,5 +1,7 @@
 import type { Board, GameColors, Position, CustomGameSettings } from '../types/game';
 
+export const AUTO_GENERATE_SEED = 0;
+
 export const DEFAULT_COLORS: GameColors[] = [
   { name: 'blue', hex: '#3584e4' },
   { name: 'green', hex: '#33d17a' },
@@ -19,7 +21,7 @@ export const DIFFICULTIES = [
 export function createDefaultBoard(): Board {
   return {
     name: 'Custom',
-    seed: 0,
+    seed: AUTO_GENERATE_SEED,
     rows: 0,
     columns: 0,
     step: 0,
@@ -32,14 +34,14 @@ export function initializeBoard(
   name: string,
   rows: number,
   columns: number,
-  seed: number = 0,
+  seed: number = AUTO_GENERATE_SEED,
   maxSteps: number = 0
 ): Board {
   const matrix: string[][] = Array(rows).fill(null).map(() => Array(columns).fill(''));
   
   const availableColors = DEFAULT_COLORS.map(color => color.name);
   
-  if (seed === 0) {
+  if (seed === AUTO_GENERATE_SEED) {
     seed = Date.now();
   }
 
@@ -142,7 +144,10 @@ export function flood(board: Board, newColor: string): Board {
   return newBoard;
 }
 
-export function initializeCustomBoard(settings: CustomGameSettings, seed: number = 0): Board {
+export function initializeCustomBoard(
+  settings: CustomGameSettings,
+  seed: number = AUTO_GENERATE_SEED
+): Board {
   return initializeBoard(
     'Custom',
     settings.boardSize,

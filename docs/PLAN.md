@@ -111,7 +111,7 @@ This architecture maintains the core game mechanics while leveraging modern web 
 - ✅ **Difficulty Levels**: Easy (6×6), Normal (10×10), Hard (14×14)
 - ✅ **Step Tracking**: Real-time display with low-step warnings
 - ✅ **Win/Lose Conditions**: Proper game state detection
-- ✅ **Reset Functionality**: Play again with same board
+- ✅ **Reset Functionality**: Confirmed reset generates a fresh board with the same settings
 - ✅ **New Game**: Start fresh games with different difficulties
 
 #### **⚡ Performance & Development**
@@ -193,6 +193,8 @@ The Flood It web game is now complete and playable at `http://localhost:5173` wi
 - **Flood-fill correctness**: Updated BFS to also absorb connected cells that already match the selected color
 - **Dark mode hook stability**: Refactored initialization to remove effect-driven state updates and satisfy strict hook linting
 - **Color keyboard memo cleanup**: Removed stale dependency warning by inlining gap calculation in memoized layout
+- **Reset behavior correction**: Confirmed reset now regenerates the board with a new random seed instead of recreating the same matrix
+- **Seed readability refactor**: Replaced seed magic numbers with `AUTO_GENERATE_SEED` in game logic utilities
 - **Quality gate**: `bun run lint` and `bun run build` now pass after the latest fixes
 
 ### **Recent UI/UX Enhancements**
