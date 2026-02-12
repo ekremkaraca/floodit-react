@@ -14,6 +14,11 @@ export function Game() {
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+  const [customSettings, setCustomSettings] = useState<CustomGameSettings>({
+    boardSize: 10,
+    customMoveLimit: false,
+    moveLimit: 20,
+  });
   const [confirmDialogContent, setConfirmDialogContent] = useState({
     title: 'Confirm Action',
     message: 'Are you sure you want to proceed?',
@@ -74,9 +79,7 @@ export function Game() {
 
   const handleReset = useCallback(() => {
     if (!board) return;
-    setPendingAction(() => {
-      resetGame();
-    });
+    setPendingAction(() => resetGame);
     setConfirmDialogContent({
       title: 'Reset Game?',
       message: 'This will reset your current board and progress. Continue?',
@@ -85,6 +88,7 @@ export function Game() {
   }, [board, resetGame]);
 
   const handleCustomGame = (settings: CustomGameSettings) => {
+    setCustomSettings(settings);
     startCustomGame(settings);
     setShowCustomMode(false);
     setLastGameConfig({ type: 'custom', settings });
@@ -120,6 +124,11 @@ export function Game() {
     setShowCustomMode(false);
     quitGame();
   }, [quitGame]);
+
+  const closeConfirmDialog = useCallback(() => {
+    setShowConfirmDialog(false);
+    setPendingAction(null);
+  }, []);
 
   const isTextInputTarget = (target: EventTarget | null): boolean => {
     if (!(target instanceof HTMLElement)) return false;
@@ -186,9 +195,8 @@ export function Game() {
   const handleConfirmAction = () => {
     if (pendingAction) {
       pendingAction();
-      setPendingAction(null);
     }
-    setShowConfirmDialog(false);
+    closeConfirmDialog();
   };
 
   const handleCloseGameOver = () => {
@@ -203,6 +211,8 @@ export function Game() {
   if (showCustomMode) {
     return (
       <CustomGameMode
+        settings={customSettings}
+        onSettingsChange={setCustomSettings}
         onStartCustomGame={handleCustomGame}
         onCancel={handleCancelCustom}
       />
@@ -263,7 +273,7 @@ export function Game() {
       {/* Confirmation Dialog */}
       <ConfirmDialog
         isOpen={showConfirmDialog}
-        onClose={() => setShowConfirmDialog(false)}
+        onClose={closeConfirmDialog}
         onConfirm={handleConfirmAction}
         title={confirmDialogContent.title}
         message={confirmDialogContent.message}

@@ -1,36 +1,45 @@
-import { useState } from 'react';
 import type { CustomGameSettings } from '../types/game';
 
 interface CustomGameModeProps {
+  settings: CustomGameSettings;
+  onSettingsChange: (settings: CustomGameSettings) => void;
   onStartCustomGame: (settings: CustomGameSettings) => void;
   onCancel: () => void;
 }
 
-export function CustomGameMode({ onStartCustomGame, onCancel }: CustomGameModeProps) {
-  const [boardSize, setBoardSize] = useState(10);
-  const [customMoveLimit, setCustomMoveLimit] = useState(false);
-  const [moveLimit, setMoveLimit] = useState(20);
-
+export function CustomGameMode({
+  settings,
+  onSettingsChange,
+  onStartCustomGame,
+  onCancel,
+}: CustomGameModeProps) {
+  const { boardSize, customMoveLimit, moveLimit } = settings;
   const handleStartGame = () => {
-    const settings: CustomGameSettings = {
+    const nextSettings: CustomGameSettings = {
       boardSize,
       customMoveLimit,
       moveLimit: customMoveLimit ? moveLimit : 0,
     };
-    onStartCustomGame(settings);
+    onStartCustomGame(nextSettings);
   };
 
   const handleBoardSizeChange = (value: string) => {
     const size = parseInt(value);
     if (!isNaN(size) && size >= 5 && size <= 25) {
-      setBoardSize(size);
+      onSettingsChange({
+        ...settings,
+        boardSize: size,
+      });
     }
   };
 
   const handleMoveLimitChange = (value: string) => {
     const limit = parseInt(value);
-    if (!isNaN(limit) && limit >= 1 && limit <= 100) {
-      setMoveLimit(limit);
+    if (!isNaN(limit) && limit >= 5 && limit <= 100) {
+      onSettingsChange({
+        ...settings,
+        moveLimit: limit,
+      });
     }
   };
 
@@ -69,7 +78,12 @@ export function CustomGameMode({ onStartCustomGame, onCancel }: CustomGameModePr
               </label>
               <button
                 type="button"
-                onClick={() => setCustomMoveLimit(!customMoveLimit)}
+                onClick={() =>
+                  onSettingsChange({
+                    ...settings,
+                    customMoveLimit: !customMoveLimit,
+                  })
+                }
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                   customMoveLimit ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
                 }`}

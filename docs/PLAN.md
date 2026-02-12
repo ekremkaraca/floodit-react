@@ -1,6 +1,6 @@
 # The Plan
 
-Entire plan of the game mostly written with Windsurf AI since it is a game porting project.
+Entire plan of the game mostly written with Windsurf AI & OpenAI Codex since it is a game porting project.
 
 ## Game Analysis Summary
 
@@ -24,13 +24,15 @@ src/
 ├── components/
 │   ├── GameBoard.tsx      # Main game grid
 │   ├── ColorKeyboard.tsx  # Color selection interface
-│   ├── GameHeader.tsx     # Score and steps display (legacy)
-│   ├── GameMetadata.tsx   # Sticky header + progress + controls + color picker
-│   └── GameControls.tsx   # New game, difficulty settings
+│   ├── GameHeader.tsx     # Header with progress and steps
+│   ├── GameControls.tsx   # New game, reset, dark mode, source link
+│   ├── Welcome.tsx        # Welcome screen and difficulty selection
+│   ├── CustomGameMode.tsx # Custom game settings
+│   ├── ConfirmDialog.tsx  # Confirmed actions (reset/new/quit)
+│   └── GameOver.tsx       # End-of-game modal
 ├── hooks/
 │   ├── useGameLogic.ts    # Core game state and flood algorithm
 │   └── useDarkMode.ts     # Dark mode preference + DOM toggle
-│   └── useGameState.ts    # Win/lose conditions and scoring
 ├── utils/
 │   └── gameUtils.ts       # Board generation and flood fill
 └── types/
@@ -58,7 +60,7 @@ The Go backend logic will be ported to JavaScript/TypeScript:
 1. **Game Board**: Responsive grid with rounded corners
 2. **Color Keyboard**: Visual color selection buttons
 3. **Game States**: Welcome screen, playing, win/lose screens
-4. **Difficulty Levels**: Easy, Medium, Hard with different board sizes
+4. **Difficulty Levels**: Easy, Normal, Hard with different board sizes
 5. **Step Tracking**: Real-time display of remaining moves
 6. **Restart Functionality**: Play again with same or new board
 
@@ -92,8 +94,7 @@ This architecture maintains the core game mechanics while leveraging modern web 
 #### **🧩 Component Architecture**
 - ✅ **GameBoard.tsx**: Responsive grid with dynamic cell sizing
 - ✅ **ColorKeyboard.tsx**: Interactive color selection with hover effects
-- ✅ **GameHeader.tsx**: Real-time step counter and game info (legacy)
-- ✅ **GameMetadata.tsx**: Sticky header with progress, color picker, controls, and dark toggle
+- ✅ **GameHeader.tsx**: Sticky header with progress, steps, and controls
 - ✅ **GameControls.tsx**: New game and reset functionality (dropdown variant)
 - ✅ **Game.tsx**: Main game component with state management
 
@@ -107,7 +108,7 @@ This architecture maintains the core game mechanics while leveraging modern web 
 - ✅ **Dark Mode**: Theme toggle with persisted preference
 
 #### **🎯 Game Features**
-- ✅ **Difficulty Levels**: Easy (12×12), Medium (16×16), Hard (20×20)
+- ✅ **Difficulty Levels**: Easy (6×6), Normal (10×10), Hard (14×14)
 - ✅ **Step Tracking**: Real-time display with low-step warnings
 - ✅ **Win/Lose Conditions**: Proper game state detection
 - ✅ **Reset Functionality**: Play again with same board
@@ -160,7 +161,7 @@ export default defineConfig({
 The Flood It web game is now complete and playable at `http://localhost:5173` with all original features successfully ported to modern web technologies.
 
 ### **Recent Additions (TanStack Start parity)**
-- **GameMetadata header**: Progress bar, step urgency, color picker, and controls in a sticky header
+- **GameHeader + GameControls**: Progress bar, step urgency, and gameplay controls in a sticky header
 - **Dark mode**: Toggle in the header, persisted in `localStorage`, with early script to prevent flash
 - **GameControls dropdown**: New Game with difficulty list + Reset button styling
 - **Welcome screen refresh**: “How to Play” panel and dark-mode-ready layout
@@ -175,9 +176,9 @@ The Flood It web game is now complete and playable at `http://localhost:5173` wi
   - Distinct messages for reset vs new game
   - Custom game currently bypasses confirmation and opens settings directly
 - **Difficulty Alignment**: Updated to match original Go version parameters
-  - Easy: 6×6 board with 15 moves (was 12×12)
-  - Normal: 10×10 board with 20 moves (was 16×16) 
-  - Hard: 14×14 board with 25 moves (was 20×20)
+  - Easy: 6×6 board with 15 moves
+  - Normal: 10×10 board with 20 moves
+  - Hard: 14×14 board with 25 moves
   - Proper move limit integration with game logic
 - **Bun Migration**: Complete transition from npm to Bun
   - Updated package.json dependencies to use `bun:` prefix

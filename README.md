@@ -4,6 +4,10 @@ A modern web implementation of the classic Flood It puzzle game, built with Reac
 
 [Demo](https://floodit-react.vercel.app/)
 
+See also our current reference project [Flood It](https://github.com/ekremkaraca/floodit-js) with vanilla JavaScript and custom CSS instead of Tailwind CSS.
+
+There is also [an implementation with SvelteKit](https://github.com/ekremkaraca/floodit-sveltekit) with SvelteKit and Tailwind CSS.
+
 ## Features
 
 - 🎮 **Classic Gameplay**: Flood the entire board with one color in limited moves
@@ -61,10 +65,11 @@ bun preview
 
 ### Controls
 
-- **Color Selection**: Click color buttons or use keyboard shortcuts (1-6)
+- **Color Selection**: Click/tap color buttons in the keyboard at the bottom
 - **New Game**: Click "New Game" dropdown and select difficulty
 - **Reset**: Click "Reset" to restart the current board
 - **Dark Mode**: Toggle with the moon/sun icon
+- **Keyboard Shortcuts**: `Alt+Shift+R` (reset), `Alt+Shift+N` (new round), `Alt+Shift+Q` (quit)
 
 ## Game Modes
 
@@ -130,6 +135,10 @@ src/
 │   └── game.ts          # Game-related interfaces
 └── assets/              # Static assets
 ```
+
+## Architecture
+
+- See `docs/CODEBASE.md` for module responsibilities, state flow, and lifecycle details.
 
 ## Contributing
 

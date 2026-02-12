@@ -84,7 +84,9 @@ export function Welcome({ onNewGame }: WelcomeProps) {
               onClick={() => onNewGame(difficulty)}
               className="w-full px-6 py-3 bg-linear-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 transform hover:scale-105 font-semibold shadow-md"
             >
-              {difficulty.name} ({difficulty.rows}×{difficulty.columns})
+              {difficulty.name === "Custom"
+                ? "Custom (choose size and move limit)"
+                : `${difficulty.name} (${difficulty.rows}×${difficulty.columns})`}
             </button>
           ))}
         </div>

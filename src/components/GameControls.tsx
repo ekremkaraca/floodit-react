@@ -83,11 +83,17 @@ export function GameControls({
                 }}
                 disabled={disabled}
                 className="w-full px-3 py-2 sm:px-4 sm:py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                aria-label={`Start new ${difficulty.name.toLowerCase()} game (${difficulty.rows}×${difficulty.columns})`}
+                aria-label={
+                  difficulty.name === "Custom"
+                    ? "Open custom game settings"
+                    : `Start new ${difficulty.name.toLowerCase()} game (${difficulty.rows}×${difficulty.columns})`
+                }
               >
                 <div className="font-medium">{difficulty.name}</div>
                 <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                  {difficulty.rows}×{difficulty.columns}
+                  {difficulty.name === "Custom"
+                    ? "Configure board size and move limit"
+                    : `${difficulty.rows}×${difficulty.columns}`}
                 </div>
               </button>
             ))}
