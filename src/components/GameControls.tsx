@@ -1,4 +1,4 @@
-import { ChevronDown, Moon, Sun, Code } from "lucide-react";
+import { ChevronDown, Moon, Sun, Code, CircleHelp } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Difficulty } from "../types/game";
 import { DIFFICULTIES } from "../utils/gameUtils";
@@ -7,12 +7,14 @@ import { useDarkMode } from "../hooks/useDarkMode";
 interface GameControlsProps {
   onNewGame: (difficulty: Difficulty) => void;
   onReset: () => void;
+  onHelp?: () => void;
   disabled?: boolean;
 }
 
 export function GameControls({
   onNewGame,
   onReset,
+  onHelp,
   disabled = false,
 }: GameControlsProps) {
   const { isDarkMode, toggleDarkMode, isMounted } = useDarkMode();
@@ -130,6 +132,18 @@ export function GameControls({
         ) : (
           <Moon className="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors" />
         )}
+      </button>
+
+      {/* Github source code button */}
+      <button
+        type="button"
+        onClick={() => onHelp?.()}
+        className="px-2 py-2 sm:px-4 sm:py-2.5 bg-linear-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all duration-200 font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+        title="Open help and rules"
+        aria-label="Open help and rules"
+        disabled={!onHelp}
+      >
+        <CircleHelp className="w-4 h-4 text-gray-600 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors" />
       </button>
 
       {/* Github source code button */}

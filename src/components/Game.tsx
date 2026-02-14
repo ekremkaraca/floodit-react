@@ -11,11 +11,13 @@ import { CustomGameMode } from "./CustomGameMode";
 import { Welcome } from './Welcome';
 import { GameOver } from './GameOver';
 import { ConfirmDialog } from './ConfirmDialog';
+import { HelpRules } from './HelpRules';
 
 export function Game() {
   const [persistedState] = useState(() => loadPersistedState());
   const [showCustomMode, setShowCustomMode] = useState(false);
   const [showGameOverModal, setShowGameOverModal] = useState(false);
+  const [showHelpPage, setShowHelpPage] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
   const [customSettings, setCustomSettings] = useState<CustomGameSettings>(
@@ -217,6 +219,18 @@ export function Game() {
     setShowGameOverModal(false);
   };
 
+  const handleOpenHelp = () => {
+    setShowHelpPage(true);
+  };
+
+  const handleCloseHelp = () => {
+    setShowHelpPage(false);
+  };
+
+  if (showHelpPage) {
+    return <HelpRules onBack={handleCloseHelp} isInGame={Boolean(board)} />;
+  }
+
   if (showCustomMode) {
     return (
       <CustomGameMode
@@ -230,7 +244,7 @@ export function Game() {
 
   if (!board) {
     return (
-      <Welcome onNewGame={handleNewGame} />
+      <Welcome onNewGame={handleNewGame} onOpenHelp={handleOpenHelp} />
     );
   }
 
@@ -245,6 +259,7 @@ export function Game() {
             maxSteps={board.maxSteps}
             onNewGame={handleNewGame}
             onReset={handleReset}
+            onHelp={handleOpenHelp}
             controlsDisabled={false}
           />
         </div>

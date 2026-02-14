@@ -8,6 +8,7 @@ interface GameHeaderProps {
   maxSteps: number;
   onNewGame?: (difficulty: Difficulty) => void;
   onReset?: () => void;
+  onHelp?: () => void;
   controlsDisabled?: boolean;
 }
 
@@ -18,6 +19,7 @@ export function GameHeader({
   maxSteps,
   onNewGame,
   onReset,
+  onHelp,
   controlsDisabled = false,
 }: GameHeaderProps) {
   const getStepsColorClass = (): string => {
@@ -101,6 +103,7 @@ export function GameHeader({
             <GameControls
               onNewGame={onNewGame || (() => {})}
               onReset={onReset || (() => {})}
+              onHelp={onHelp}
               disabled={controlsDisabled}
             />
           </div>
