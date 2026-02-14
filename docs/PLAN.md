@@ -1,5 +1,36 @@
 # The Plan
 
+> Note: large parts of this document are historical implementation notes.
+> For the current source-of-truth architecture and lifecycle, use `docs/CODEBASE.md`.
+
+## Current Status (2026-02-14)
+
+### Completed Since Initial Plan
+
+- Added maze gameplay support in React:
+  - Maze presets (`Maze Easy`, `Maze Normal`, `Maze Hard`)
+  - custom game mode toggle (`classic` / `maze`)
+  - maze board model fields (`mode`, `walls`, `goal`)
+  - unified win checks (`isBoardWon`)
+- Added persistence module (`src/state/persistence.ts`):
+  - versioned localStorage payload
+  - sanitization/clamping for persisted values
+  - persisted keys: `selectedColor`, `lastGameConfig`, `customSettings`
+- Added Bun-native test suites:
+  - `tests/utils/gameUtils.test.ts`
+  - `tests/utils/gameFlow.test.ts`
+  - `tests/state/persistence.test.ts`
+- Updated welcome flow:
+  - mode tabs (`Classic`/`Maze`)
+  - mode-filtered difficulties
+  - compact mobile-friendly layout
+
+### Verification Snapshot
+
+- `bun run test`: passing
+- `bun run lint`: passing
+- `bun run build`: passing
+
 Entire plan of the game mostly written with Windsurf AI & OpenAI Codex since it is a game porting project.
 
 ## Game Analysis Summary

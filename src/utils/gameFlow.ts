@@ -1,5 +1,5 @@
 import type { Board, CustomGameSettings, Difficulty } from '../types/game';
-import { flood, getStepsLeft, isAllFilled } from './gameUtils';
+import { flood, getStepsLeft, isBoardWon } from './gameUtils';
 
 export type MoveResult = {
   success: boolean;
@@ -38,7 +38,7 @@ export function resolveMove(board: Board | null, colorName: string): MoveResolut
 
   const nextBoard = flood(board, colorName);
 
-  if (isAllFilled(nextBoard)) {
+  if (isBoardWon(nextBoard)) {
     return {
       nextBoard,
       result: { success: true, gameState: 'won' },
@@ -78,6 +78,7 @@ export function resolveRoundStartTarget(
         rows: board.rows,
         columns: board.columns,
         maxSteps: board.maxSteps,
+        mode: board.mode ?? 'classic',
       },
     };
   }

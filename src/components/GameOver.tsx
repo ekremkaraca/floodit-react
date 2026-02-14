@@ -9,6 +9,7 @@ interface GameOverProps {
 }
 
 export function GameOver({ hasWon, board, isOpen, onClose, onNewGame }: GameOverProps) {
+    const isMaze = board.mode === 'maze';
     return (
         <div 
             className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${
@@ -54,8 +55,12 @@ export function GameOver({ hasWon, board, isOpen, onClose, onNewGame }: GameOver
                     
                     <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
                         {hasWon
-                            ? `Congratulations! You completed the board in ${board.step} moves!`
-                            : "You ran out of moves. The board was not completely flooded."}
+                            ? isMaze
+                                ? `Congratulations! You reached the goal in ${board.step} moves!`
+                                : `Congratulations! You completed the board in ${board.step} moves!`
+                            : isMaze
+                                ? "You ran out of moves before reaching the goal."
+                                : "You ran out of moves. The board was not completely flooded."}
                     </p>
                     
                     {hasWon && (

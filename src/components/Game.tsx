@@ -21,6 +21,7 @@ export function Game() {
   const [customSettings, setCustomSettings] = useState<CustomGameSettings>(
     () =>
       persistedState?.customSettings ?? {
+        gameMode: 'classic',
         boardSize: 10,
         customMoveLimit: false,
         moveLimit: 20,
@@ -62,6 +63,10 @@ export function Game() {
 
   const handleNewGame = (difficulty: Difficulty) => {
     if (difficulty.name === 'Custom') {
+      const mode = difficulty.mode;
+      if (mode) {
+        setCustomSettings((current) => ({ ...current, gameMode: mode }));
+      }
       setShowCustomMode(true);
     } else {
       const startGame = () => {

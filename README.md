@@ -1,37 +1,46 @@
 # Flood It React
 
-A modern web implementation of the classic Flood It puzzle game, built with React, TypeScript, and Tailwind CSS.
+Modern web implementation of Flood It, built with React + TypeScript + Tailwind CSS.
 
 [Demo](https://floodit-react.vercel.app/)
 
-See also our current reference project [Flood It](https://github.com/ekremkaraca/floodit-js) with vanilla JavaScript and custom CSS instead of Tailwind CSS.
-
-There is also [an implementation with SvelteKit](https://github.com/ekremkaraca/floodit-sveltekit) with SvelteKit and Tailwind CSS.
+Reference projects:
+- [floodit-js](https://github.com/ekremkaraca/floodit-js) (vanilla JS)
+- [floodit-sveltekit](https://github.com/ekremkaraca/floodit-sveltekit)
 
 ## Features
 
-- 🎮 **Classic Gameplay**: Flood the entire board with one color in limited moves
-- 🎯 **Multiple Difficulties**: Easy (6×6), Normal (10×10), Hard (14×14)
-- ⚙️ **Custom Game Mode**: Create your own board size and move limits
-- 🌙 **Dark Mode**: Toggle between light and dark themes
-- 📱 **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- ⚡ **Instant Play**: No installation required, runs in any modern browser
+- Classic mode and Maze mode gameplay
+- Presets:
+  - Classic: Easy (6x6), Normal (10x10), Hard (14x14)
+  - Maze: Maze Easy (10x10), Maze Normal (12x12), Maze Hard (14x14)
+- Custom mode with mode toggle (`classic` / `maze`)
+- Confirmed actions (reset/new/quit)
+- Dark mode with persisted preference
+- Keyboard shortcuts: `Alt+Shift+R`, `Alt+Shift+N`, `Alt+Shift+Q`
+- Bun-native automated tests
+
+## Stack
+
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Vite (rolldown-vite)
+- Bun
 
 ## Getting Started
 
-This project uses [Bun](https://bun.sh) as the package manager and runtime.
-
 ### Prerequisites
 
-- [Bun](https://bun.sh) installed on your system
+- [Bun](https://bun.sh)
 
-### Installation
+### Install
 
 ```bash
 bun install
 ```
 
-### Development
+### Run Dev Server
 
 ```bash
 bun dev
@@ -49,113 +58,70 @@ bun build
 bun lint
 ```
 
-### Preview
+### Test
+
+```bash
+bun test
+```
+
+### Preview Build
 
 ```bash
 bun preview
 ```
 
-## How to Play
+## How To Play
 
-1. **Start from the top-left corner** (already highlighted)
-2. **Select colors** from the color keyboard at the bottom
-3. **Flood connected areas** with your chosen color
-4. **Fill the entire board** with one color before running out of moves
-5. **Complete in minimum moves** for the best efficiency score
+### Classic
 
-### Controls
+1. Start from the top-left corner.
+2. Select colors to expand connected region.
+3. Fill the board with one color before moves run out.
 
-- **Color Selection**: Click/tap color buttons in the keyboard at the bottom
-- **New Game**: Click "New Game" dropdown and select difficulty
-- **Reset**: Click "Reset" to restart the current board
-- **Dark Mode**: Toggle with the moon/sun icon
-- **Keyboard Shortcuts**: `Alt+Shift+R` (reset), `Alt+Shift+N` (new round), `Alt+Shift+Q` (quit)
+### Maze
 
-## Game Modes
-
-### Standard Difficulties
-- **Easy**: 6×6 board, 15 moves
-- **Normal**: 10×10 board, 20 moves  
-- **Hard**: 14×14 board, 25 moves
-
-### Custom Mode
-- **Board Size**: 5×5 to 25×25
-- **Move Limit**: Custom or auto-calculated
-- **Perfect for**: Creating your own challenge level
-
-## Technology Stack
-
-- **React 19** - Modern UI framework
-- **TypeScript** - Type safety and better development experience
-- **Tailwind CSS v4** - Utility-first styling with custom theme
-- **Vite** - Fast development and build tool
-- **Bun** - Package manager and runtime
-
-## Recent Updates
-
-### 🎮 Enhanced User Experience
-- **Modal Game Over Screen**: Beautiful modal with animations and action buttons
-- **Mobile-Optimized Header**: Compact design with responsive layout
-- **Mobile-Friendly Controls**: Touch-optimized buttons with smart sizing
-- **Dynamic Color Keyboard**: Adaptive button sizes based on board difficulty
-- **Responsive Game Board**: Grid scales to viewport/container size with aspect ratio preserved
-
-### 📱 Mobile Improvements
-- **Responsive Header**: Adapts from compact mobile to full desktop layout
-- **Touch-Optimized Buttons**: Larger touch targets and press feedback
-- **Smart Button Labels**: Symbols on mobile, text on desktop
-- **Adaptive Color Keys**: Larger buttons for easy boards, compact for hard boards
-- **Board + Keyboard Visibility**: Desktop height cap keeps controls visible without scrolling
-
-### 🎨 UI/UX Enhancements
-- **Container Centering**: Proper max-width containers for better alignment
-- **Smooth Animations**: Scale transitions and hover effects
-- **Dark Mode Support**: Consistent theming across all components
-- **Accessibility**: Proper ARIA labels and keyboard navigation
+1. Start from the top-left corner.
+2. Walls block flood expansion.
+3. Reach the `G` goal tile before moves run out.
 
 ## Project Structure
 
-```
+```text
 src/
-├── components/          # React components
-│   ├── Game.tsx         # Main game component
-│   ├── GameBoard.tsx    # Game grid rendering
-│   ├── ColorKeyboard.tsx # Color selection interface (adaptive sizing)
-│   ├── GameHeader.tsx   # Compact header with progress and controls
-│   ├── GameControls.tsx  # Mobile-friendly game controls
-│   ├── GameOver.tsx     # Modal game over screen
-│   ├── CustomGameMode.tsx # Custom game settings
-│   └── Welcome.tsx      # Welcome screen with difficulty selection
-├── hooks/               # Custom React hooks
-│   ├── useGameLogic.ts  # Core game state management
-│   └── useDarkMode.ts   # Dark mode functionality
-├── utils/               # Utility functions
-│   └── gameUtils.ts     # Game logic and algorithms
-├── types/               # TypeScript type definitions
-│   └── game.ts          # Game-related interfaces
-└── assets/              # Static assets
+├── components/           # UI components and screens
+├── hooks/                # React hooks (game logic + dark mode)
+├── state/                # Persistence (versioned localStorage)
+├── types/                # Domain types
+└── utils/                # Pure game engine + flow utilities
+
+tests/
+├── state/                # Persistence tests
+└── utils/                # Engine/flow tests
 ```
 
-## Architecture
+## Architecture Docs
 
-- See `docs/CODEBASE.md` for module responsibilities, state flow, and lifecycle details.
+- `docs/CODEBASE.md`: current architecture, lifecycle, state, persistence, testing
+- `docs/PLAN.md`: roadmap/history notes
 
-## Contributing
+## Quality Gates
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run `bun lint` to check for issues
-5. Submit a pull request
+- `bun run test`
+- `bun run lint`
+- `bun run build`
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+MIT ([LICENSE](LICENSE))
 
 ## Acknowledgments
 
-Based on the original [Flood It](https://github.com/tfuxu/floodit) GTK desktop application by tfuxu.
+## Acknowledgments
 
-Game algorithm inspired by [Open Flood](https://github.com/GunshipPenguin/open_flood) and [The FloodIt! game](https://otfried.org/scala/floodit.html) by Otfried Cheong.
+Based on the original [Flood It](https://github.com/tfuxu/floodit) GTK app by tfuxu.
+
+Inspired by:
+- [Open Flood](https://github.com/GunshipPenguin/open_flood)
+- [The FloodIt! game](https://otfried.org/scala/floodit.html) by Otfried Cheong
 
 Thanks [Windsurf IDE](https://windsurf.com), [OpenAI Codex](https://openai.com/codex/) and their AI assistants for helping with the implementation.

@@ -96,6 +96,7 @@ describe('utils/gameFlow resolveRoundStartTarget', () => {
 
   test('prefers last custom config when present', () => {
     const settings: CustomGameSettings = {
+      gameMode: 'classic',
       boardSize: 12,
       customMoveLimit: true,
       moveLimit: 28,
@@ -122,6 +123,29 @@ describe('utils/gameFlow resolveRoundStartTarget', () => {
         rows: 10,
         columns: 10,
         maxSteps: 20,
+        mode: 'classic',
+      },
+    });
+  });
+
+  test('fallback keeps maze mode from current board', () => {
+    const board = createBoard({
+      name: 'Maze Easy',
+      mode: 'maze',
+      rows: 10,
+      columns: 10,
+      maxSteps: 22,
+    });
+
+    const target = resolveRoundStartTarget(null, board);
+    expect(target).toEqual({
+      type: 'difficulty',
+      difficulty: {
+        name: 'Maze Easy',
+        rows: 10,
+        columns: 10,
+        maxSteps: 22,
+        mode: 'maze',
       },
     });
   });

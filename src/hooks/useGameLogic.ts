@@ -3,8 +3,9 @@ import type { Board, Difficulty, CustomGameSettings } from '../types/game';
 import {
   initializeBoard,
   initializeCustomBoard,
+  initializeMazeBoard,
   getStepsLeft,
-  isAllFilled,
+  isBoardWon,
   AUTO_GENERATE_SEED,
   DEFAULT_COLORS,
 } from '../utils/gameUtils';
@@ -18,13 +19,21 @@ export function useGameLogic() {
     difficulty: Difficulty,
     seed: number = AUTO_GENERATE_SEED
   ) => {
-    const newBoard = initializeBoard(
-      difficulty.name,
-      difficulty.rows,
-      difficulty.columns,
-      seed,
-      difficulty.maxSteps || 0
-    );
+    const newBoard = difficulty.mode === 'maze'
+      ? initializeMazeBoard(
+          difficulty.name,
+          difficulty.rows,
+          difficulty.columns,
+          seed,
+          difficulty.maxSteps || 0
+        )
+      : initializeBoard(
+          difficulty.name,
+          difficulty.rows,
+          difficulty.columns,
+          seed,
+          difficulty.maxSteps || 0
+        );
     setBoard(newBoard);
     setSelectedColor('');
   }, []);
@@ -48,14 +57,22 @@ export function useGameLogic() {
 
   const resetGame = useCallback(() => {
     if (!board) return;
-    
-    const newBoard = initializeBoard(
-      board.name,
-      board.rows,
-      board.columns,
-      AUTO_GENERATE_SEED,
-      board.maxSteps
-    );
+
+    const newBoard = board.mode === 'maze'
+      ? initializeMazeBoard(
+          board.name,
+          board.rows,
+          board.columns,
+          AUTO_GENERATE_SEED,
+          board.maxSteps
+        )
+      : initializeBoard(
+          board.name,
+          board.rows,
+          board.columns,
+          AUTO_GENERATE_SEED,
+          board.maxSteps
+        );
     setBoard(newBoard);
     setSelectedColor('');
   }, [board]);
@@ -66,8 +83,8 @@ export function useGameLogic() {
   }, []);
 
   const stepsLeft = board ? getStepsLeft(board) : 0;
-  const isGameOver = board ? (isAllFilled(board) || stepsLeft < 1) : false;
-  const hasWon = board ? isAllFilled(board) : false;
+  const isGameOver = board ? (isBoardWon(board) || stepsLeft < 1) : false;
+  const hasWon = board ? isBoardWon(board) : false;
 
   return {
     board,

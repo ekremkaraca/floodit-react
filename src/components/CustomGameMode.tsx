@@ -13,9 +13,10 @@ export function CustomGameMode({
   onStartCustomGame,
   onCancel,
 }: CustomGameModeProps) {
-  const { boardSize, customMoveLimit, moveLimit } = settings;
+  const { gameMode, boardSize, customMoveLimit, moveLimit } = settings;
   const handleStartGame = () => {
     const nextSettings: CustomGameSettings = {
+      gameMode,
       boardSize,
       customMoveLimit,
       moveLimit: customMoveLimit ? moveLimit : 0,
@@ -51,6 +52,36 @@ export function CustomGameMode({
         </h2>
 
         <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Game Mode
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => onSettingsChange({ ...settings, gameMode: 'classic' })}
+                className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  gameMode === 'classic'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
+                }`}
+              >
+                Classic
+              </button>
+              <button
+                type="button"
+                onClick={() => onSettingsChange({ ...settings, gameMode: 'maze' })}
+                className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  gameMode === 'maze'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
+                }`}
+              >
+                Maze
+              </button>
+            </div>
+          </div>
+
           {/* Board Size Control */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -123,6 +154,7 @@ export function CustomGameMode({
               Game Settings
             </h3>
             <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+              <div>Mode: {gameMode === 'maze' ? 'Maze' : 'Classic'}</div>
               <div>Board: {boardSize}×{boardSize} ({boardSize * boardSize} cells)</div>
               <div>
                 Move Limit: {customMoveLimit ? moveLimit : 'Auto-calculated'}

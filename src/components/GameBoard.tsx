@@ -81,6 +81,26 @@ export function GameBoard({ board }: GameBoardProps) {
     };
   }, [board.columns, board.rows, containerSize.height, containerSize.width, viewportSize.height, viewportSize.width]);
 
+  const renderCell = (cellColor: string, rowIndex: number, colIndex: number) => {
+    const isWall = Boolean(board.walls?.[rowIndex]?.[colIndex]);
+    const isGoal = board.goal?.row === rowIndex && board.goal?.column === colIndex;
+
+    return (
+      <div
+        key={`${rowIndex}-${colIndex}`}
+        className={`border border-gray-300 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm font-bold ${
+          isWall
+            ? 'bg-gray-800 text-gray-200'
+            : `${getColorClass(cellColor)} hover:opacity-80`
+        }`}
+        style={{ width: '100%', height: '100%' }}
+        title={isGoal ? 'Goal' : undefined}
+      >
+        {isGoal ? 'G' : null}
+      </div>
+    );
+  };
+
   return (
     <div ref={containerRef} className="flex justify-center items-center w-full h-full min-h-0 p-2 sm:p-4">
       <div 
@@ -93,13 +113,7 @@ export function GameBoard({ board }: GameBoardProps) {
         }}
       >
         {board.matrix.map((row, rowIndex) =>
-          row.map((cellColor, colIndex) => (
-            <div
-              key={`${rowIndex}-${colIndex}`}
-              className={`${getColorClass(cellColor)} border border-gray-300 transition-all duration-300 hover:opacity-80`}
-              style={{ width: '100%', height: '100%' }}
-            />
-          ))
+          row.map((cellColor, colIndex) => renderCell(cellColor, rowIndex, colIndex))
         )}
       </div>
     </div>

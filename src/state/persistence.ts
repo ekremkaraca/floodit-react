@@ -36,12 +36,14 @@ function sanitizeDifficulty(value: unknown): Difficulty | null {
     rows,
     columns,
     maxSteps,
+    mode: value.mode === 'maze' ? 'maze' : 'classic',
   };
 }
 
 function sanitizeCustomSettings(value: unknown): CustomGameSettings {
   if (!isPlainObject(value)) {
     return {
+      gameMode: 'classic',
       boardSize: 10,
       customMoveLimit: false,
       moveLimit: 20,
@@ -49,6 +51,7 @@ function sanitizeCustomSettings(value: unknown): CustomGameSettings {
   }
 
   return {
+    gameMode: value.gameMode === 'maze' ? 'maze' : 'classic',
     boardSize: toSafeInteger(value.boardSize, 10, 5, 25),
     customMoveLimit: Boolean(value.customMoveLimit),
     moveLimit: toSafeInteger(value.moveLimit, 20, 5, 100),

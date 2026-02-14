@@ -28,6 +28,7 @@ describe('state/persistence', () => {
         selectedColor: 'blue',
         lastGameConfig: null,
         customSettings: {
+          gameMode: 'classic',
           boardSize: 10,
           customMoveLimit: false,
           moveLimit: 20,
@@ -57,12 +58,14 @@ describe('state/persistence', () => {
         lastGameConfig: {
           type: 'custom',
           settings: {
+            gameMode: 'maze',
             boardSize: 100,
             customMoveLimit: true,
             moveLimit: 999,
           },
         },
         customSettings: {
+          gameMode: 'maze',
           boardSize: 1,
           customMoveLimit: true,
           moveLimit: 1000,
@@ -73,6 +76,7 @@ describe('state/persistence', () => {
     expect(sanitized).not.toBeNull();
     expect(sanitized?.selectedColor).toBe('');
     expect(sanitized?.customSettings).toEqual({
+      gameMode: 'maze',
       boardSize: 5,
       customMoveLimit: true,
       moveLimit: 100,
@@ -80,6 +84,7 @@ describe('state/persistence', () => {
     expect(sanitized?.lastGameConfig).toEqual({
       type: 'custom',
       settings: {
+        gameMode: 'maze',
         boardSize: 25,
         customMoveLimit: true,
         moveLimit: 100,
@@ -99,9 +104,11 @@ describe('state/persistence', () => {
             rows: -5,
             columns: 100,
             maxSteps: 9999,
+            mode: 'maze',
           },
         },
         customSettings: {
+          gameMode: 'classic',
           boardSize: 12,
           customMoveLimit: false,
           moveLimit: 20,
@@ -117,6 +124,7 @@ describe('state/persistence', () => {
         rows: 1,
         columns: 25,
         maxSteps: 500,
+        mode: 'maze',
       },
     });
   });
@@ -132,6 +140,7 @@ describe('state/persistence', () => {
           selectedColor: 'green',
           lastGameConfig: null,
           customSettings: {
+            gameMode: 'classic',
             boardSize: 12,
             customMoveLimit: false,
             moveLimit: 20,
@@ -145,6 +154,7 @@ describe('state/persistence', () => {
       selectedColor: 'green',
       lastGameConfig: null,
       customSettings: {
+        gameMode: 'classic',
         boardSize: 12,
         customMoveLimit: false,
         moveLimit: 20,

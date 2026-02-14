@@ -92,8 +92,10 @@ export function GameControls({
                 <div className="font-medium">{difficulty.name}</div>
                 <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                   {difficulty.name === "Custom"
-                    ? "Configure board size and move limit"
-                    : `${difficulty.rows}×${difficulty.columns}`}
+                    ? "Configure mode, board size and move limit"
+                    : difficulty.mode === "maze"
+                      ? `${difficulty.rows}×${difficulty.columns} - reach goal`
+                      : `${difficulty.rows}×${difficulty.columns}`}
                 </div>
               </button>
             ))}
