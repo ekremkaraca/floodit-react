@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useGameLogic } from "../hooks/useGameLogic";
 import type { Difficulty, CustomGameSettings } from "../types/game";
+import type { LastGameConfig } from '../utils/gameFlow';
+import { resolveRoundStartTarget } from '../utils/gameFlow';
+import { loadPersistedState, savePersistedState } from '../state/persistence';
 import { GameBoard } from "./GameBoard";
 import { GameHeader } from "./GameHeader";
 import { ColorKeyboard } from "./ColorKeyboard";
@@ -10,24 +13,26 @@ import { GameOver } from './GameOver';
 import { ConfirmDialog } from './ConfirmDialog';
 
 export function Game() {
+  const [persistedState] = useState(() => loadPersistedState());
   const [showCustomMode, setShowCustomMode] = useState(false);
   const [showGameOverModal, setShowGameOverModal] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
-  const [customSettings, setCustomSettings] = useState<CustomGameSettings>({
-    boardSize: 10,
-    customMoveLimit: false,
-    moveLimit: 20,
-  });
+  const [customSettings, setCustomSettings] = useState<CustomGameSettings>(
+    () =>
+      persistedState?.customSettings ?? {
+        boardSize: 10,
+        customMoveLimit: false,
+        moveLimit: 20,
+      },
+  );
   const [confirmDialogContent, setConfirmDialogContent] = useState({
     title: 'Confirm Action',
     message: 'Are you sure you want to proceed?',
   });
-  const [lastGameConfig, setLastGameConfig] = useState<
-    | { type: 'difficulty'; difficulty: Difficulty }
-    | { type: 'custom'; settings: CustomGameSettings }
-    | null
-  >(null);
+  const [lastGameConfig, setLastGameConfig] = useState<LastGameConfig>(
+    () => persistedState?.lastGameConfig ?? null,
+  );
   
   const {
     board,
@@ -99,24 +104,15 @@ export function Game() {
   };
 
   const startNewRoundWithCurrentSettings = useCallback(() => {
-    if (lastGameConfig?.type === 'difficulty') {
-      startNewGame(lastGameConfig.difficulty);
+    const target = resolveRoundStartTarget(lastGameConfig, board);
+    if (!target) return;
+
+    if (target.type === 'difficulty') {
+      startNewGame(target.difficulty);
       return;
     }
 
-    if (lastGameConfig?.type === 'custom') {
-      startCustomGame(lastGameConfig.settings);
-      return;
-    }
-
-    if (board) {
-      startNewGame({
-        name: board.name,
-        rows: board.rows,
-        columns: board.columns,
-        maxSteps: board.maxSteps,
-      });
-    }
+    startCustomGame(target.settings);
   }, [board, lastGameConfig, startCustomGame, startNewGame]);
 
   const handleQuitToWelcome = useCallback(() => {
@@ -191,6 +187,14 @@ export function Game() {
     showCustomMode,
     startNewRoundWithCurrentSettings,
   ]);
+
+  useEffect(() => {
+    savePersistedState({
+      selectedColor,
+      lastGameConfig,
+      customSettings,
+    });
+  }, [customSettings, lastGameConfig, selectedColor]);
 
   const handleConfirmAction = () => {
     if (pendingAction) {

@@ -3,12 +3,12 @@ import type { Board, Difficulty, CustomGameSettings } from '../types/game';
 import {
   initializeBoard,
   initializeCustomBoard,
-  flood,
   getStepsLeft,
   isAllFilled,
   AUTO_GENERATE_SEED,
   DEFAULT_COLORS,
 } from '../utils/gameUtils';
+import { resolveMove } from '../utils/gameFlow';
 
 export function useGameLogic() {
   const [board, setBoard] = useState<Board | null>(null);
@@ -30,26 +30,11 @@ export function useGameLogic() {
   }, []);
 
   const makeMove = useCallback((colorName: string) => {
-    if (!board || getStepsLeft(board) < 1) {
-      return { success: false, gameState: 'lost' as const };
+    const { nextBoard, result } = resolveMove(board, colorName);
+    if (nextBoard !== board) {
+      setBoard(nextBoard);
     }
-
-    if (board.matrix[0][0] === colorName) {
-      return { success: false, gameState: null };
-    }
-
-    const newBoard = flood(board, colorName);
-    setBoard(newBoard);
-
-    if (isAllFilled(newBoard)) {
-      return { success: true, gameState: 'won' as const };
-    }
-
-    if (getStepsLeft(newBoard) < 1) {
-      return { success: true, gameState: 'lost' as const };
-    }
-
-    return { success: true, gameState: 'playing' as const };
+    return result;
   }, [board]);
 
   const startCustomGame = useCallback((

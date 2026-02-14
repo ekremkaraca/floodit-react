@@ -10,6 +10,7 @@ The app uses React component state with a mostly unidirectional flow:
 2. `Game.tsx` handles screen-level intent (new game, reset, confirm, custom mode, shortcuts).
 3. `useGameLogic` (`src/hooks/useGameLogic.ts`) computes board/game transitions using `src/utils/gameUtils.ts`.
 4. React rerenders components from updated state.
+5. Persisted UI preferences/config are loaded/saved via `src/state/persistence.ts`.
 
 ## Entry Points
 
@@ -27,6 +28,12 @@ The app uses React component state with a mostly unidirectional flow:
 - `src/hooks/useGameLogic.ts`
   - Encapsulates board lifecycle and move processing.
   - Exposes `startNewGame`, `startCustomGame`, `makeMove`, `resetGame`, `quitGame`, and computed flags.
+  - Uses `resolveMove` from `src/utils/gameFlow.ts` for pure move-resolution logic.
+
+- `src/utils/gameFlow.ts`
+  - Pure orchestration helpers used by UI/hook layers.
+  - `resolveMove(board, color)` returns `{ nextBoard, result }` (`playing`/`won`/`lost`/invalid).
+  - `resolveRoundStartTarget(lastGameConfig, board)` resolves “new round with current settings” fallback behavior.
 
 - `src/components/Game.tsx`
   - Coordinates app-level UI state not owned by `useGameLogic`:
@@ -36,6 +43,11 @@ The app uses React component state with a mostly unidirectional flow:
     - `lastGameConfig` for "new round with current settings"
     - persisted custom setup defaults (`customSettings`)
   - Registers global keyboard shortcuts.
+
+- `src/state/persistence.ts`
+  - Versioned localStorage load/save + sanitization.
+  - Persists only lightweight UI/config state (`selectedColor`, `lastGameConfig`, `customSettings`).
+  - Defensively clamps invalid/malformed data before use.
 
 - `src/components/*`
   - Presentation and local interaction layers:
@@ -62,6 +74,12 @@ Managed in `src/hooks/useGameLogic.ts`:
 - `board`
 - `selectedColor`
 - computed values: `stepsLeft`, `isGameOver`, `hasWon`
+
+Persisted via `src/state/persistence.ts`:
+
+- `selectedColor`
+- `lastGameConfig`
+- `customSettings`
 
 ## Game Lifecycle
 
@@ -91,6 +109,20 @@ Reset/new/quit use a shared confirm dialog:
 3. On confirm: execute `pendingAction`, then close dialog through one centralized close path.
 4. On cancel: close dialog and clear `pendingAction`.
 
+### Persistence Lifecycle
+
+1. On `Game` mount, `loadPersistedState()` initializes:
+   - `customSettings`
+   - `lastGameConfig`
+2. During runtime, `Game` saves on state changes via `savePersistedState()`:
+   - `selectedColor`
+   - `customSettings`
+   - `lastGameConfig`
+3. Persisted payload is versioned (`STORAGE_VERSION`) and sanitized on read:
+   - numeric clamping for board/move values
+   - selected-color validation against known palette
+   - malformed payload fallback to defaults/null
+
 ## Keyboard Shortcuts
 
 Defined in `src/components/Game.tsx` (gameplay only):
@@ -115,7 +147,6 @@ Ignored when:
 
 ## Quality Gates
 
+- Test: `bun run test`
 - Lint: `bun run lint`
 - Build: `bun run build`
-
-There are no committed automated tests yet.
