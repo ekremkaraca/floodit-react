@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun --hot --port 5173 index.html",
-    "build": "bun build --target=browser --outdir=dist --splitting --sourcemap --minify index.html",
+    "build": "bun build --production --target=browser --outdir=dist --splitting --sourcemap --minify index.html",
     "typecheck": "tsc -b",
     "lint": "oxlint . --ignore-pattern dist",
     "lint:fix": "oxlint . --fix --ignore-pattern dist",

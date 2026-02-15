@@ -1,17 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 import { loadPersistedState, savePersistedState } from "../state/persistence";
 import type { CustomGameSettings, Difficulty } from "../types/game";
 import { resolveRoundStartTarget } from "../utils/gameFlow";
 import type { LastGameConfig } from "../utils/gameFlow";
 import { ColorKeyboard } from "./ColorKeyboard";
 import { ConfirmDialog } from "./ConfirmDialog";
-import { CustomGameMode } from "./CustomGameMode";
 import { GameBoard } from "./GameBoard";
 import { GameHeader } from "./GameHeader";
-import { GameOver } from "./GameOver";
-import { HelpRules } from "./HelpRules";
 import { Welcome } from "./Welcome";
 import { useGameLogic } from "../hooks/useGameLogic";
+
+const CustomGameMode = lazy(() =>
+  import("./CustomGameMode").then((module) => ({ default: module.CustomGameMode })),
+);
+const HelpRules = lazy(() =>
+  import("./HelpRules").then((module) => ({ default: module.HelpRules })),
+);
+const GameOver = lazy(() =>
+  import("./GameOver").then((module) => ({ default: module.GameOver })),
+);
 
 export function Game() {
   const [persistedState] = useState(() => loadPersistedState());
@@ -221,17 +228,23 @@ export function Game() {
   };
 
   if (showHelpPage) {
-    return <HelpRules onBack={() => setShowHelpPage(false)} isInGame={Boolean(board)} />;
+    return (
+      <Suspense fallback={null}>
+        <HelpRules onBack={() => setShowHelpPage(false)} isInGame={Boolean(board)} />
+      </Suspense>
+    );
   }
 
   if (showCustomMode) {
     return (
-      <CustomGameMode
-        settings={customSettings}
-        onSettingsChange={setCustomSettings}
-        onStartCustomGame={handleCustomGame}
-        onCancel={handleCancelCustom}
-      />
+      <Suspense fallback={null}>
+        <CustomGameMode
+          settings={customSettings}
+          onSettingsChange={setCustomSettings}
+          onStartCustomGame={handleCustomGame}
+          onCancel={handleCancelCustom}
+        />
+      </Suspense>
     );
   }
 
@@ -259,13 +272,15 @@ export function Game() {
       <main className="app-main">
         <div className="app-content">
           {isGameOver ? (
-            <GameOver
-              hasWon={hasWon}
-              board={board}
-              isOpen={showGameOverModal}
-              onClose={handleCloseGameOver}
-              onNewGame={handleNewGameFromGameOver}
-            />
+            <Suspense fallback={null}>
+              <GameOver
+                hasWon={hasWon}
+                board={board}
+                isOpen={showGameOverModal}
+                onClose={handleCloseGameOver}
+                onNewGame={handleNewGameFromGameOver}
+              />
+            </Suspense>
           ) : null}
 
           <div className="app-board-area">
