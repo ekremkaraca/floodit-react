@@ -16,6 +16,8 @@
     "preview": "bun --hot --port 4173 dist/index.html"
   },
   "dependencies": {
+    "@tailwindcss/node": "^4.1.18",
+    "@tailwindcss/oxide": "^4.1.18",
     "@vercel/speed-insights": "^1.3.1",
     "lucide-react": "^0.542.0",
     "react": "^19.2.0",
