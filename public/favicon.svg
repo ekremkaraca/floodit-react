@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Flood It favicon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef4ff" />
+      <stop offset="100%" stop-color="#f6ecff" />
+    </linearGradient>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#bg)" />
+  <rect x="8" y="8" width="48" height="48" rx="10" fill="#ffffff" stroke="#d7e1f0" stroke-width="2" />
+
+  <g transform="translate(12 12)">
+    <rect width="13.33" height="13.33" fill="#3584e4" />
+    <rect x="13.33" width="13.33" height="13.33" fill="#33d17a" />
+    <rect x="26.66" width="13.34" height="13.33" fill="#f6d32d" />
+
+    <rect y="13.33" width="13.33" height="13.33" fill="#3584e4" />
+    <rect x="13.33" y="13.33" width="13.33" height="13.33" fill="#ff7800" />
+    <rect x="26.66" y="13.33" width="13.34" height="13.33" fill="#ed333b" />
+
+    <rect y="26.66" width="13.33" height="13.34" fill="#3584e4" />
+    <rect x="13.33" y="26.66" width="13.33" height="13.34" fill="#9141ac" />
+    <rect x="26.66" y="26.66" width="13.34" height="13.34" fill="#33d17a" />
+  </g>
+
+  <rect x="12" y="12" width="13.33" height="40" fill="none" stroke="#ffffff" stroke-width="1.6" opacity="0.95" />
+</svg>
