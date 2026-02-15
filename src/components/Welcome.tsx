@@ -126,10 +126,10 @@ export function Welcome({ onNewGame, onOpenHelp }: WelcomeProps) {
             >
               {difficulty.name === "Custom"
                 ? activeMode === "maze"
-                  ? "Custom Maze (choose size and move limit)"
-                  : "Custom (choose size and move limit)"
+                  ? "Custom Maze"
+                  : "Custom Classic"
                 : difficulty.mode === "maze"
-                  ? `${difficulty.name} (${difficulty.rows}x${difficulty.columns}) - reach goal`
+                  ? `${difficulty.name} (${difficulty.rows}x${difficulty.columns})`
                   : `${difficulty.name} (${difficulty.rows}x${difficulty.columns})`}
             </button>
           ))}
