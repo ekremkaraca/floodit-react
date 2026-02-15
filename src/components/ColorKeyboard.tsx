@@ -18,6 +18,7 @@ export function ColorKeyboard({
 }: ColorKeyboardProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
+  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
     const el = containerRef.current;
@@ -33,7 +34,20 @@ export function ColorKeyboard({
     return () => observer.disconnect();
   }, []);
 
+  useLayoutEffect(() => {
+    const updateViewport = () => {
+      setViewportSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+    return () => window.removeEventListener("resize", updateViewport);
+  }, []);
+
   const boardSize = board ? board.rows * board.columns : 0;
+  const isMobile = viewportSize.width > 0 && viewportSize.width < 640;
+  const isTinyMobile = isMobile && viewportSize.height > 0 && viewportSize.height <= 760;
+  const isUltraFitDesktop = viewportSize.width >= 1024 && viewportSize.height > 0 && viewportSize.height <= 860;
   const paddingClass =
     boardSize <= 36
       ? "keyboard-wrap--large"
@@ -44,24 +58,28 @@ export function ColorKeyboard({
   const layout = useMemo(() => {
     const width = containerWidth > 0 ? containerWidth : 360;
     const columns = width < 420 ? 3 : Math.min(colors.length, 6);
-    const gap = boardSize > 0 && boardSize <= 100 ? 10 : 8;
+    const baseGap = boardSize > 0 && boardSize <= 100 ? 8 : 6;
+    const gap = isUltraFitDesktop || isTinyMobile ? Math.max(3, baseGap - 3) : isMobile ? Math.max(4, baseGap - 2) : baseGap;
 
-    const [maxSize, minSize] =
+    const [baseMaxSize, baseMinSize] =
       boardSize <= 36
-        ? [88, 48]
+        ? [72, 40]
         : boardSize <= 100
-          ? [72, 42]
+          ? [58, 34]
           : boardSize <= 196
-            ? [64, 38]
-            : [56, 32];
+            ? [52, 30]
+            : [46, 28];
+    const sizeScale = isUltraFitDesktop ? 0.84 : isTinyMobile ? 0.74 : isMobile ? 0.82 : 1;
+    const maxSize = Math.floor(baseMaxSize * sizeScale);
+    const minSize = Math.floor(baseMinSize * sizeScale);
 
     const totalGap = gap * (columns - 1);
-    const sizeFromWidth = Math.floor((Math.max(320, Math.min(width * 0.92, 540)) - totalGap) / columns);
+    const sizeFromWidth = Math.floor((Math.max(isMobile ? 260 : 320, Math.min(width * 0.92, 540)) - totalGap) / columns);
     const size = Math.max(minSize, Math.min(maxSize, sizeFromWidth));
     const maxRowWidth = columns * size + totalGap;
 
     return { size, gap, maxRowWidth };
-  }, [boardSize, colors.length, containerWidth]);
+  }, [boardSize, colors.length, containerWidth, isMobile, isTinyMobile, isUltraFitDesktop]);
 
   return (
     <div ref={containerRef} className={`keyboard-wrap ${paddingClass}`}>

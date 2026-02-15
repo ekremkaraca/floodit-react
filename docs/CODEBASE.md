@@ -26,8 +26,8 @@ Core gameplay now supports two modes:
 
 ## Tooling Commands
 
-- `bun run dev`: runs Bun HTML dev server + Tailwind CSS watch compiler in parallel
-- `bun run build`: compiles Tailwind CSS then builds production bundle into `dist/`
+- `bun run dev`: runs Bun HTML dev server with hot reload
+- `bun run build`: builds production bundle into `dist/`
 - `bun run preview`: serves built output from `dist/index.html` on preview port
 - `bun run typecheck`: runs TypeScript project build-mode checks
 
@@ -96,8 +96,8 @@ Core gameplay now supports two modes:
   - `CustomGameMode.tsx`: mode toggle + board-size/move-limit controls
   - `GameHeader.tsx`: progress + controls container
   - `GameControls.tsx`: new/reset/theme/source actions
-  - `GameBoard.tsx`: responsive grid rendering, including walls and `G` goal marker
-  - `ColorKeyboard.tsx`: color selection panel
+  - `GameBoard.tsx`: responsive grid rendering, including walls, `S` start marker, `G` goal marker, and legend with mode-specific target text
+  - `ColorKeyboard.tsx`: responsive color selection panel with viewport-aware key sizing
   - `ConfirmDialog.tsx`: shared confirm dialog
   - `GameOver.tsx`: mode-aware win/lose messaging
 
@@ -228,6 +228,10 @@ Test runner: `bun test` (via `bun run test`).
 - Main styling lives in `src/index.css` and is adapted from upstream `floodit-js`.
 - The app uses semantic component class names (for example `panel`, `game-header`, `board-grid`, `color-key`).
 - Game colors are applied from `DEFAULT_COLORS` in board/keyboard components via inline `backgroundColor`.
+- Responsive layout includes:
+  - mobile-fit tuning (`@media (max-width: 640px)`)
+  - desktop-fit tuning (`@media (min-width: 640px)`)
+  - ultra-fit short desktop tuning (`@media (min-width: 1024px) and (max-height: 860px)`)
 
 ## Quality Gates
 

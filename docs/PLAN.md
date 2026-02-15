@@ -31,6 +31,11 @@
   - mode tabs (`Classic`/`Maze`)
   - mode-filtered difficulties
   - compact mobile-friendly layout
+- Updated board UX and responsive fit:
+  - restored and standardized `S` start marker
+  - kept maze `G` goal marker and added board legend for both modes
+  - added mode-specific target text in legend
+  - tuned board/legend/keyboard sizing for mobile, desktop, and short-height desktop ("ultra-fit")
 
 ### Verification Snapshot
 

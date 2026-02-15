@@ -11,10 +11,14 @@ Reference projects:
 ## Features
 
 - Classic mode and Maze mode gameplay
+- Start marker (`S`) on the top-left tile for all modes
+- Goal marker (`G`) in maze mode
+- In-game legend with mode-specific target guidance
 - Presets:
   - Classic: Easy (6x6), Normal (10x10), Hard (14x14)
   - Maze: Maze Easy (10x10), Maze Normal (12x12), Maze Hard (14x14)
 - Custom mode with mode toggle (`classic` / `maze`)
+- Responsive board/legend/keyboard fitting tuned for mobile, desktop, and short-height screens
 - Confirmed actions (reset/new/quit)
 - Dark mode with persisted preference
 - Keyboard shortcuts: `Alt+Shift+R`, `Alt+Shift+N`, `Alt+Shift+Q`
@@ -84,13 +88,13 @@ bun run preview
 
 ### Classic
 
-1. Start from the top-left corner.
+1. Start from the top-left `S` tile.
 2. Select colors to expand connected region.
 3. Fill the board with one color before moves run out.
 
 ### Maze
 
-1. Start from the top-left corner.
+1. Start from the top-left `S` tile.
 2. Walls block flood expansion.
 3. Reach the `G` goal tile before moves run out.
 
