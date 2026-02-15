@@ -3,7 +3,7 @@
 > Note: large parts of this document are historical implementation notes.
 > For the current source-of-truth architecture and lifecycle, use `docs/CODEBASE.md`.
 
-## Current Status (2026-02-14)
+## Current Status (2026-02-15)
 
 ### Completed Since Initial Plan
 
@@ -20,6 +20,11 @@
   - `tests/utils/gameUtils.test.ts`
   - `tests/utils/gameFlow.test.ts`
   - `tests/state/persistence.test.ts`
+- Replaced Vite with Bun-native web bundling/runtime:
+  - dev server via `bun --hot index.html`
+  - production build via `bun build index.html`
+  - Tailwind CSS v4 compilation via `scripts/build-tailwind.ts` -> `public/styles.css`
+  - removed Vite-only config (`vite.config.ts`, `tsconfig.node.json`)
 - Updated welcome flow:
   - mode tabs (`Classic`/`Maze`)
   - mode-filtered difficulties
@@ -110,10 +115,10 @@ This architecture maintains the core game mechanics while leveraging modern web 
 ### **Completed Features**
 
 #### **🏗️ Project Setup & Configuration**
-- ✅ React + TypeScript + Vite project initialized
-- ✅ Tailwind CSS v4 integrated with Vite plugin
+- ✅ React + TypeScript project initialized
+- ✅ Tailwind CSS v4 integrated via standalone build script (`scripts/build-tailwind.ts`)
 - ✅ Bun package manager configured
-- ✅ PostCSS and build pipeline optimized
+- ✅ Bun-native dev/build pipeline configured
 
 #### **🎮 Core Game Logic**
 - ✅ **Board Structure**: TypeScript interfaces for `Board`, `Position`, `GameColors`
@@ -149,7 +154,7 @@ This architecture maintains the core game mechanics while leveraging modern web 
 - ✅ **Custom Hooks**: `useGameLogic` for state management
 - ✅ **Theme Hook**: `useDarkMode` for dark-mode preference and DOM updates
 - ✅ **Type Safety**: Full TypeScript coverage
-- ✅ **Hot Reload**: Vite development server with fast refresh
+- ✅ **Hot Reload**: Bun HTML dev server (`bun --hot`) with React refresh
 - ✅ **Code Organization**: Clean separation of concerns
 
 ### **Technical Implementation Details**
@@ -170,15 +175,18 @@ This architecture maintains the core game mechanics while leveraging modern web 
 }
 ```
 
-#### **Vite Configuration**
-```typescript
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-})
+#### **Bun Pipeline Configuration**
+```json
+{
+  "scripts": {
+    "dev": "bun run --parallel css:watch dev:server",
+    "dev:server": "bun --hot --port 5173 index.html",
+    "css:build": "bun run scripts/build-tailwind.ts",
+    "css:watch": "bun run scripts/build-tailwind.ts --watch",
+    "build": "bun run css:build && bun build --target=browser --outdir=dist --splitting --sourcemap --minify index.html",
+    "preview": "bun --hot --port 4173 dist/index.html"
+  }
+}
 ```
 
 #### **Game Algorithm**
@@ -189,11 +197,11 @@ export default defineConfig({
 
 ### **Current Status: 🎮 FULLY FUNCTIONAL**
 
-The Flood It web game is now complete and playable at `http://localhost:5173` with all original features successfully ported to modern web technologies.
+The Flood It web game is now complete and playable with the Bun dev server (`bun run dev`, default port `5173` when available) with all original features successfully ported to modern web technologies.
 
 ### **Recent Additions (TanStack Start parity)**
 - **GameHeader + GameControls**: Progress bar, step urgency, and gameplay controls in a sticky header
-- **Dark mode**: Toggle in the header, persisted in `localStorage`, with early script to prevent flash
+- **Dark mode**: Toggle in the header, persisted in `localStorage`, with early inline script in `index.html` to prevent flash
 - **GameControls dropdown**: New Game with difficulty list + Reset button styling
 - **Welcome screen refresh**: “How to Play” panel and dark-mode-ready layout
 - **Dependency**: `lucide-react` for dark-mode toggle icons
@@ -212,9 +220,9 @@ The Flood It web game is now complete and playable at `http://localhost:5173` wi
   - Hard: 14×14 board with 25 moves
   - Proper move limit integration with game logic
 - **Bun Migration**: Complete transition from npm to Bun
-  - Updated package.json dependencies to use `bun:` prefix
-  - Comprehensive README with Bun-specific commands
-  - Optimized for Bun's faster package management and runtime
+  - Replaced Vite scripts/config with Bun dev/build/preview scripts
+  - Added Tailwind CSS build/watch script for non-Vite pipeline
+  - Updated docs and quality gates for Bun-native workflow
 
 ### **Recent Fixes**
 - **Game Over restart**: Removed full page reload and restart via in-app flow

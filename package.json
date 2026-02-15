@@ -4,15 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "bun run --parallel css:watch dev:server",
+    "dev:server": "bun --hot --port 5173 index.html",
+    "css:build": "bun run scripts/build-tailwind.ts",
+    "css:watch": "bun run scripts/build-tailwind.ts --watch",
+    "build": "bun run css:build && bun build --target=browser --outdir=dist --splitting --sourcemap --minify index.html",
+    "typecheck": "tsc -b",
     "lint": "oxlint . --ignore-pattern dist",
     "lint:fix": "oxlint . --fix --ignore-pattern dist",
     "test": "bun test",
-    "preview": "vite preview"
+    "preview": "bun --hot --port 4173 dist/index.html"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.18",
     "@vercel/speed-insights": "^1.3.1",
     "lucide-react": "^0.542.0",
     "react": "^19.2.0",
@@ -23,13 +26,8 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
     "globals": "^16.5.0",
     "oxlint": "^1.47.0",
-    "typescript": "~5.9.3",
-    "vite": "npm:rolldown-vite@7.2.5"
-  },
-  "overrides": {
-    "vite": "npm:rolldown-vite@7.2.5"
+    "typescript": "~5.9.3"
   }
 }

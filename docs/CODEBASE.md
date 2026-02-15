@@ -19,10 +19,17 @@ Core gameplay now supports two modes:
 
 ## Entry Points
 
-- `index.html`: bootstraps dark mode preference early via `/scripts/darkMode.js`.
+- `index.html`: bootstraps dark mode preference early via an inline script in `<head>`.
 - `src/main.tsx`: mounts `<App />` in `StrictMode`.
 - `src/App.tsx`: renders the root game component.
 - `src/components/Game.tsx`: application orchestrator for view switching and global flows.
+
+## Tooling Commands
+
+- `bun run dev`: runs Bun HTML dev server + Tailwind CSS watch compiler in parallel
+- `bun run build`: compiles Tailwind CSS then builds production bundle into `dist/`
+- `bun run preview`: serves built output from `dist/index.html` on preview port
+- `bun run typecheck`: runs TypeScript project build-mode checks
 
 ## Core Modules
 
@@ -94,7 +101,7 @@ Core gameplay now supports two modes:
   - `ConfirmDialog.tsx`: shared confirm dialog
   - `GameOver.tsx`: mode-aware win/lose messaging
 
-- `src/hooks/useDarkMode.ts` + `public/scripts/darkMode.js`
+- `src/hooks/useDarkMode.ts` + inline script in `index.html`
   - Dark mode preference and DOM class management.
   - Early script prevents flash of incorrect theme before React hydration.
 
@@ -218,7 +225,7 @@ Test runner: `bun test` (via `bun run test`).
 
 ## Styling
 
-- Tailwind CSS v4 via `src/index.css`.
+- Tailwind CSS v4 source in `src/index.css`, compiled to `public/styles.css` via `scripts/build-tailwind.ts`.
 - Game color tokens are defined in `@theme`.
 - Components use utility classes; no CSS modules currently.
 

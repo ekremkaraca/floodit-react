@@ -25,8 +25,13 @@ Reference projects:
 - React 19
 - TypeScript
 - Tailwind CSS v4
-- Vite (rolldown-vite)
-- Bun
+- Bun bundler/runtime
+
+## Build Pipeline
+
+- CSS: `src/index.css` is compiled to `public/styles.css` by `scripts/build-tailwind.ts`
+- Dev server: Bun serves `index.html` with hot reload
+- Production bundle: Bun bundles from `index.html` into `dist/`
 
 ## Getting Started
 
@@ -43,31 +48,37 @@ bun install
 ### Run Dev Server
 
 ```bash
-bun dev
+bun run dev
 ```
 
 ### Build
 
 ```bash
-bun build
+bun run build
+```
+
+### Type Check
+
+```bash
+bun run typecheck
 ```
 
 ### Lint
 
 ```bash
-bun lint
+bun run lint
 ```
 
 ### Test
 
 ```bash
-bun test
+bun run test
 ```
 
 ### Preview Build
 
 ```bash
-bun preview
+bun run preview
 ```
 
 ## How To Play
