@@ -22,75 +22,42 @@ export function GameHeader({
   onHelp,
   controlsDisabled = false,
 }: GameHeaderProps) {
-  const getStepsColorClass = (): string => {
-    const safeMaxSteps = Math.max(1, maxSteps);
-    const percentageRemaining = (stepsLeft / safeMaxSteps) * 100;
-    if (percentageRemaining > 50) return "text-green-600";
-    if (percentageRemaining > 25) return "text-yellow-600";
-    return "text-red-600";
-  };
+  const safeMaxSteps = Math.max(1, maxSteps);
+  const percentageRemaining = (stepsLeft / safeMaxSteps) * 100;
+  const stepsColorClass =
+    percentageRemaining > 50
+      ? "steps-tone--good"
+      : percentageRemaining > 25
+        ? "steps-tone--warn"
+        : "steps-tone--danger";
 
-  const progressPercentage = (currentStep / Math.max(1, maxSteps)) * 100;
+  const progressPercentage = (currentStep / safeMaxSteps) * 100;
 
   return (
-    <nav className="bg-white dark:bg-gray-800 rounded-lg shadow-md px-2 sm:px-3 py-1.5 sm:py-2 transition-colors duration-200">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between gap-2 sm:gap-4">
-          {/* Left Section: Game Info */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+    <nav className="game-header">
+      <div className="game-header__inner">
+        <div className="game-header__row">
+          <div className="game-header__main">
             <div>
-              <h1 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 truncate">
-                {boardName}
-              </h1>
+              <h1 className="game-header__title">{boardName}</h1>
             </div>
 
-            {/* Mobile Steps Counter */}
-            <div className="flex items-center gap-1 sm:hidden">
-              <div
-                className={`text-sm font-bold ${getStepsColorClass()
-                  .replace(
-                    "text-green-600",
-                    "text-green-600 dark:text-green-400",
-                  )
-                  .replace(
-                    "text-yellow-600",
-                    "text-yellow-600 dark:text-yellow-400",
-                  )
-                  .replace("text-red-600", "text-red-600 dark:text-red-400")}`}
-              >
-                {stepsLeft}
-              </div>
-              <div className="text-xs text-gray-600 dark:text-gray-400">
-                left
-              </div>
+            <div className="game-header__steps-mobile">
+              <div className={`steps-count ${stepsColorClass}`}>{stepsLeft}</div>
+              <div className="steps-label">left</div>
             </div>
 
-            {/* Desktop Progress Bar */}
-            <div className="hidden sm:flex flex-1 max-w-xs items-center">
-              <div className="w-full">
-                <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1 px-2">
-                  <span
-                    className={`${getStepsColorClass()
-                      .replace(
-                        "text-green-600",
-                        "text-green-600 dark:text-green-400",
-                      )
-                      .replace(
-                        "text-yellow-600",
-                        "text-yellow-600 dark:text-yellow-400",
-                      )
-                      .replace(
-                        "text-red-600",
-                        "text-red-600 dark:text-red-400",
-                      )}`}
-                  >
+            <div className="game-header__progress-wrap">
+              <div className="progress">
+                <div className="progress__meta">
+                  <span className={stepsColorClass}>
                     {currentStep} / {maxSteps} ({stepsLeft} steps left)
                   </span>
                   <span>{Math.round(progressPercentage)}%</span>
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
+                <div className="progress__track">
                   <div
-                    className="h-full bg-linear-to-r from-blue-500 to-purple-500 transition-all duration-300 ease-out"
+                    className="progress__fill"
                     style={{ width: `${progressPercentage}%` }}
                   />
                 </div>
@@ -98,8 +65,7 @@ export function GameHeader({
             </div>
           </div>
 
-          {/* Right Section: Controls */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          <div className="game-header__actions">
             <GameControls
               onNewGame={onNewGame || (() => {})}
               onReset={onReset || (() => {})}

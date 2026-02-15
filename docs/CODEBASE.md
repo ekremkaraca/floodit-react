@@ -225,9 +225,9 @@ Test runner: `bun test` (via `bun run test`).
 
 ## Styling
 
-- Tailwind CSS v4 source in `src/index.css`, compiled to `public/styles.css` via `scripts/build-tailwind.ts`.
-- Game color tokens are defined in `@theme`.
-- Components use utility classes; no CSS modules currently.
+- Main styling lives in `src/index.css` and is adapted from upstream `floodit-js`.
+- The app uses semantic component class names (for example `panel`, `game-header`, `board-grid`, `color-key`).
+- Game colors are applied from `DEFAULT_COLORS` in board/keyboard components via inline `backgroundColor`.
 
 ## Quality Gates
 

@@ -23,8 +23,10 @@
 - Replaced Vite with Bun-native web bundling/runtime:
   - dev server via `bun --hot index.html`
   - production build via `bun build index.html`
-  - Tailwind CSS v4 compilation via `scripts/build-tailwind.ts` -> `public/styles.css`
   - removed Vite-only config (`vite.config.ts`, `tsconfig.node.json`)
+- Migrated styling from Tailwind utilities to upstream-inspired static CSS:
+  - copied/adapted `floodit-js` stylesheet into `src/index.css`
+  - updated React components to semantic class names (`panel`, `game-header`, `board-grid`, etc.)
 - Updated welcome flow:
   - mode tabs (`Classic`/`Maze`)
   - mode-filtered difficulties
@@ -116,7 +118,7 @@ This architecture maintains the core game mechanics while leveraging modern web 
 
 #### **🏗️ Project Setup & Configuration**
 - ✅ React + TypeScript project initialized
-- ✅ Tailwind CSS v4 integrated via standalone build script (`scripts/build-tailwind.ts`)
+- ✅ Upstream-inspired static CSS styling integrated (`src/index.css`)
 - ✅ Bun package manager configured
 - ✅ Bun-native dev/build pipeline configured
 
@@ -159,31 +161,15 @@ This architecture maintains the core game mechanics while leveraging modern web 
 
 ### **Technical Implementation Details**
 
-#### **Tailwind CSS v4 Configuration**
-```css
-@import "tailwindcss";
-
-@custom-variant dark (&:where(.dark, .dark *));
-
-@theme {
-  --color-game-blue: #3584e4;
-  --color-game-green: #33d17a;
-  --color-game-yellow: #f6d32d;
-  --color-game-orange: #ff7800;
-  --color-game-red: #ed333b;
-  --color-game-purple: #9141ac;
-}
-```
+#### **Styling Configuration**
+`src/index.css` uses a semantic class system adapted from `floodit-js` (for example `panel`, `btn`, `game-header`, `board-grid`, `color-key`) and CSS variables for light/dark theming.
 
 #### **Bun Pipeline Configuration**
 ```json
 {
   "scripts": {
-    "dev": "bun run --parallel css:watch dev:server",
-    "dev:server": "bun --hot --port 5173 index.html",
-    "css:build": "bun run scripts/build-tailwind.ts",
-    "css:watch": "bun run scripts/build-tailwind.ts --watch",
-    "build": "bun run css:build && bun build --target=browser --outdir=dist --splitting --sourcemap --minify index.html",
+    "dev": "bun --hot --port 5173 index.html",
+    "build": "bun build --target=browser --outdir=dist --splitting --sourcemap --minify index.html",
     "preview": "bun --hot --port 4173 dist/index.html"
   }
 }
@@ -221,7 +207,7 @@ The Flood It web game is now complete and playable with the Bun dev server (`bun
   - Proper move limit integration with game logic
 - **Bun Migration**: Complete transition from npm to Bun
   - Replaced Vite scripts/config with Bun dev/build/preview scripts
-  - Added Tailwind CSS build/watch script for non-Vite pipeline
+  - Removed Tailwind build/watch script in favor of static CSS
   - Updated docs and quality gates for Bun-native workflow
 
 ### **Recent Fixes**

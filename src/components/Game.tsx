@@ -1,17 +1,17 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useGameLogic } from "../hooks/useGameLogic";
-import type { Difficulty, CustomGameSettings } from "../types/game";
-import type { LastGameConfig } from '../utils/gameFlow';
-import { resolveRoundStartTarget } from '../utils/gameFlow';
-import { loadPersistedState, savePersistedState } from '../state/persistence';
+import { useCallback, useEffect, useState } from "react";
+import { loadPersistedState, savePersistedState } from "../state/persistence";
+import type { CustomGameSettings, Difficulty } from "../types/game";
+import { resolveRoundStartTarget } from "../utils/gameFlow";
+import type { LastGameConfig } from "../utils/gameFlow";
+import { ColorKeyboard } from "./ColorKeyboard";
+import { ConfirmDialog } from "./ConfirmDialog";
+import { CustomGameMode } from "./CustomGameMode";
 import { GameBoard } from "./GameBoard";
 import { GameHeader } from "./GameHeader";
-import { ColorKeyboard } from "./ColorKeyboard";
-import { CustomGameMode } from "./CustomGameMode";
-import { Welcome } from './Welcome';
-import { GameOver } from './GameOver';
-import { ConfirmDialog } from './ConfirmDialog';
-import { HelpRules } from './HelpRules';
+import { GameOver } from "./GameOver";
+import { HelpRules } from "./HelpRules";
+import { Welcome } from "./Welcome";
+import { useGameLogic } from "../hooks/useGameLogic";
 
 export function Game() {
   const [persistedState] = useState(() => loadPersistedState());
@@ -23,20 +23,20 @@ export function Game() {
   const [customSettings, setCustomSettings] = useState<CustomGameSettings>(
     () =>
       persistedState?.customSettings ?? {
-        gameMode: 'classic',
+        gameMode: "classic",
         boardSize: 10,
         customMoveLimit: false,
         moveLimit: 20,
       },
   );
   const [confirmDialogContent, setConfirmDialogContent] = useState({
-    title: 'Confirm Action',
-    message: 'Are you sure you want to proceed?',
+    title: "Confirm Action",
+    message: "Are you sure you want to proceed?",
   });
   const [lastGameConfig, setLastGameConfig] = useState<LastGameConfig>(
     () => persistedState?.lastGameConfig ?? null,
   );
-  
+
   const {
     board,
     selectedColor,
@@ -64,7 +64,7 @@ export function Game() {
   };
 
   const handleNewGame = (difficulty: Difficulty) => {
-    if (difficulty.name === 'Custom') {
+    if (difficulty.name === "Custom") {
       const mode = difficulty.mode;
       if (mode) {
         setCustomSettings((current) => ({ ...current, gameMode: mode }));
@@ -74,7 +74,7 @@ export function Game() {
       const startGame = () => {
         startNewGame(difficulty);
         setShowCustomMode(false);
-        setLastGameConfig({ type: 'difficulty', difficulty });
+        setLastGameConfig({ type: "difficulty", difficulty });
       };
       if (!board) {
         startGame();
@@ -82,8 +82,8 @@ export function Game() {
       }
       setPendingAction(() => startGame);
       setConfirmDialogContent({
-        title: 'Start New Game?',
-        message: 'Starting a new game will end your current game. Continue?',
+        title: "Start New Game?",
+        message: "Starting a new game will end your current game. Continue?",
       });
       setShowConfirmDialog(true);
     }
@@ -93,8 +93,8 @@ export function Game() {
     if (!board) return;
     setPendingAction(() => resetGame);
     setConfirmDialogContent({
-      title: 'Reset Game?',
-      message: 'This will reset your current board and progress. Continue?',
+      title: "Reset Game?",
+      message: "This will reset your current board and progress. Continue?",
     });
     setShowConfirmDialog(true);
   }, [board, resetGame]);
@@ -103,7 +103,7 @@ export function Game() {
     setCustomSettings(settings);
     startCustomGame(settings);
     setShowCustomMode(false);
-    setLastGameConfig({ type: 'custom', settings });
+    setLastGameConfig({ type: "custom", settings });
   };
 
   const handleCancelCustom = () => {
@@ -114,7 +114,7 @@ export function Game() {
     const target = resolveRoundStartTarget(lastGameConfig, board);
     if (!target) return;
 
-    if (target.type === 'difficulty') {
+    if (target.type === "difficulty") {
       startNewGame(target.difficulty);
       return;
     }
@@ -138,54 +138,57 @@ export function Game() {
 
     const tagName = target.tagName.toLowerCase();
     return (
-      tagName === 'input' ||
-      tagName === 'textarea' ||
-      tagName === 'select' ||
+      tagName === "input" ||
+      tagName === "textarea" ||
+      tagName === "select" ||
       target.isContentEditable
     );
   };
 
   useEffect(() => {
     const handleKeyboardShortcut = (event: KeyboardEvent) => {
-      // Use Alt+Shift combinations to avoid common browser defaults
-      // like reload/new window/quit on Ctrl/Cmd shortcuts.
       const isShortcutModifier = event.altKey && event.shiftKey;
-      if (!isShortcutModifier || event.ctrlKey || event.metaKey || isTextInputTarget(event.target)) {
+      if (
+        !isShortcutModifier ||
+        event.ctrlKey ||
+        event.metaKey ||
+        isTextInputTarget(event.target)
+      ) {
         return;
       }
 
       const key = event.key.toLowerCase();
 
-      if (key === 'r' && board && !showConfirmDialog && !showCustomMode) {
+      if (key === "r" && board && !showConfirmDialog && !showCustomMode) {
         event.preventDefault();
         handleReset();
         return;
       }
 
-      if (key === 'n' && board && !showConfirmDialog && !showCustomMode) {
+      if (key === "n" && board && !showConfirmDialog && !showCustomMode) {
         event.preventDefault();
         setPendingAction(() => startNewRoundWithCurrentSettings);
         setConfirmDialogContent({
-          title: 'Start New Game?',
-          message: 'This will start a new board with your current settings. Continue?',
+          title: "Start New Game?",
+          message: "This will start a new board with your current settings. Continue?",
         });
         setShowConfirmDialog(true);
         return;
       }
 
-      if (key === 'q' && board && !showConfirmDialog && !showCustomMode) {
+      if (key === "q" && board && !showConfirmDialog && !showCustomMode) {
         event.preventDefault();
         setPendingAction(() => handleQuitToWelcome);
         setConfirmDialogContent({
-          title: 'Quit Game?',
-          message: 'This will return to the welcome screen and end your current game. Continue?',
+          title: "Quit Game?",
+          message: "This will return to the welcome screen and end your current game. Continue?",
         });
         setShowConfirmDialog(true);
       }
     };
 
-    window.addEventListener('keydown', handleKeyboardShortcut);
-    return () => window.removeEventListener('keydown', handleKeyboardShortcut);
+    window.addEventListener("keydown", handleKeyboardShortcut);
+    return () => window.removeEventListener("keydown", handleKeyboardShortcut);
   }, [
     board,
     handleQuitToWelcome,
@@ -204,9 +207,7 @@ export function Game() {
   }, [customSettings, lastGameConfig, selectedColor]);
 
   const handleConfirmAction = () => {
-    if (pendingAction) {
-      pendingAction();
-    }
+    if (pendingAction) pendingAction();
     closeConfirmDialog();
   };
 
@@ -219,16 +220,8 @@ export function Game() {
     setShowGameOverModal(false);
   };
 
-  const handleOpenHelp = () => {
-    setShowHelpPage(true);
-  };
-
-  const handleCloseHelp = () => {
-    setShowHelpPage(false);
-  };
-
   if (showHelpPage) {
-    return <HelpRules onBack={handleCloseHelp} isInGame={Boolean(board)} />;
+    return <HelpRules onBack={() => setShowHelpPage(false)} isInGame={Boolean(board)} />;
   }
 
   if (showCustomMode) {
@@ -243,15 +236,13 @@ export function Game() {
   }
 
   if (!board) {
-    return (
-      <Welcome onNewGame={handleNewGame} onOpenHelp={handleOpenHelp} />
-    );
+    return <Welcome onNewGame={handleNewGame} onOpenHelp={() => setShowHelpPage(true)} />;
   }
 
   return (
-    <div className="min-h-dvh bg-linear-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex flex-col transition-colors duration-200">
-      <header className="sticky top-0 z-20 shrink-0 bg-white/95 dark:bg-gray-800/95 border-b border-gray-200 dark:border-gray-700 shadow-lg backdrop-blur transition-colors duration-200">
-        <div className="max-w-full mx-auto px-2 py-0">
+    <div className="app-screen app-screen--game">
+      <header className="app-header-shell">
+        <div className="app-header-inner">
           <GameHeader
             boardName={board.name}
             stepsLeft={stepsLeft}
@@ -259,26 +250,26 @@ export function Game() {
             maxSteps={board.maxSteps}
             onNewGame={handleNewGame}
             onReset={handleReset}
-            onHelp={handleOpenHelp}
+            onHelp={() => setShowHelpPage(true)}
             controlsDisabled={false}
           />
         </div>
       </header>
 
-      <div className="flex-1 min-h-0 p-2 sm:p-4 overflow-auto">
-        <div className="max-w-4xl mx-auto min-h-0 h-full flex flex-col">
-          {isGameOver && (
-            <GameOver 
-                hasWon={hasWon} 
-                board={board} 
-                isOpen={showGameOverModal}
-                onClose={handleCloseGameOver}
-                onNewGame={handleNewGameFromGameOver}
+      <main className="app-main">
+        <div className="app-content">
+          {isGameOver ? (
+            <GameOver
+              hasWon={hasWon}
+              board={board}
+              isOpen={showGameOverModal}
+              onClose={handleCloseGameOver}
+              onNewGame={handleNewGameFromGameOver}
             />
-          )}
+          ) : null}
 
-          <div className="flex-1 min-h-0 flex items-center justify-center">
-            <div className="w-full h-full min-h-0">
+          <div className="app-board-area">
+            <div className="app-board-inner">
               <GameBoard board={board} />
             </div>
           </div>
@@ -290,11 +281,9 @@ export function Game() {
             disabled={isGameOver}
             board={board}
           />
-
         </div>
-      </div>
+      </main>
 
-      {/* Confirmation Dialog */}
       <ConfirmDialog
         isOpen={showConfirmDialog}
         onClose={closeConfirmDialog}

@@ -4,11 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "bun run --parallel css:watch dev:server",
-    "dev:server": "bun --hot --port 5173 index.html",
-    "css:build": "bun run scripts/build-tailwind.ts",
-    "css:watch": "bun run scripts/build-tailwind.ts --watch",
-    "build": "bun run css:build && bun build --target=browser --outdir=dist --splitting --sourcemap --minify index.html",
+    "dev": "bun --hot --port 5173 index.html",
+    "build": "bun build --target=browser --outdir=dist --splitting --sourcemap --minify index.html",
     "typecheck": "tsc -b",
     "lint": "oxlint . --ignore-pattern dist",
     "lint:fix": "oxlint . --fix --ignore-pattern dist",
@@ -16,13 +13,10 @@
     "preview": "bun --hot --port 4173 dist/index.html"
   },
   "dependencies": {
-    "@tailwindcss/node": "^4.1.18",
-    "@tailwindcss/oxide": "^4.1.18",
     "@vercel/speed-insights": "^1.3.1",
     "lucide-react": "^0.542.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "tailwindcss": "^4.1.18"
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

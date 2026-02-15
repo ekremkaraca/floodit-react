@@ -1,6 +1,6 @@
 # Flood It React
 
-Modern web implementation of Flood It, built with React + TypeScript + Tailwind CSS.
+Modern web implementation of Flood It, built with React + TypeScript.
 
 [Demo](https://floodit-react.vercel.app/)
 
@@ -24,12 +24,11 @@ Reference projects:
 
 - React 19
 - TypeScript
-- Tailwind CSS v4
 - Bun bundler/runtime
 
 ## Build Pipeline
 
-- CSS: `src/index.css` is compiled to `public/styles.css` by `scripts/build-tailwind.ts`
+- CSS: static stylesheet in `src/index.css` (adapted from `floodit-js`)
 - Dev server: Bun serves `index.html` with hot reload
 - Production bundle: Bun bundles from `index.html` into `dist/`
 
